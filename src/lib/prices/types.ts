@@ -1,10 +1,18 @@
 export type PriceQuoteId =
   | "has-altin"
   | "gram-altin"
-  | "ceyrek-altin"
-  | "yarim-altin"
-  | "tam-altin"
-  | "ata-besli"
+  | "ceyrek-yeni"
+  | "ceyrek-eski"
+  | "yarim-yeni"
+  | "yarim-eski"
+  | "tam-yeni"
+  | "tam-eski"
+  | "gremse-yeni"
+  | "gremse-eski"
+  | "ata-lirasi-yeni"
+  | "ata-lirasi-eski"
+  | "ata-besli-yeni"
+  | "ata-besli-eski"
   | "usd"
   | "eur";
 

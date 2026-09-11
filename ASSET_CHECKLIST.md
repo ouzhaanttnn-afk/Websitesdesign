@@ -72,12 +72,17 @@ bozulabilir.
 `MockPriceProvider`'a döner — fiyatlar sayfası **asla kırılmaz**, en kötü
 ihtimalle "Demo veri" etiketiyle gösterir.
 
-**Kapsam / eşleme:** Kaynağın sunduğu kalemlerden 8'i seçildi (Has Altın,
-Gram Altın, Çeyrek/Yarım/Tam Altın, Ata Beşli, Dolar, Euro). Önceki
-mock listesindeki "Cumhuriyet Altını" ve "22 Ayar Bilezik" bu kaynakta
-mevcut değil — fabrikasyon fiyat üretmek yerine kasıtlı olarak
-listeden çıkarıldı, yerlerine kaynağın gerçekten sunduğu "Has Altın" ve
-"Ata Beşli" eklendi.
+**Kapsam / eşleme:** 16 kalem gösteriliyor — Has Altın, Gram Altın, Dolar,
+Euro, ve 6 sikke türünün hem "Yeni" hem "Eski" (antika) fiyatı: Çeyrek,
+Yarım, Tam, Gremse, Ata Lirası, Ata Beşli. Sikke verisi
+`onlinesarrafiyetlpagedataredis.php`'den geliyor (ozandoviz.com/csarrafiye.php
+sayfasının kullandığı uç nokta) — bu tek istek Yeni+Eski tüm varyantları
+birden döndürüyor. Aynı sayfa ayrıca "Has karşılığı" (gram eşdeğeri) ve
+"işçilik" ayrıntılarını da sunuyor ama **bilerek alınmadı**: işçilik
+verisinde bariz hatalar tespit edildi (bazı kalemlerde negatif satış
+değeri) — güvenilmeyen bir alt veriyi göstermek istemedik. Önceki mock
+listesindeki "Cumhuriyet Altını" ve "22 Ayar Bilezik" bu kaynakta
+mevcut değil, yerlerine kaynağın gerçekten sunduğu kalemler kondu.
 
 **Nezaket/performans:** Kaynak site kendi sayfasında 30 saniyede bir
 sorguluyor; biz Next.js'in fetch cache'i üzerinden **60 saniyede bir**

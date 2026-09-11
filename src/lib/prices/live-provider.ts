@@ -35,13 +35,29 @@ interface QuotePick {
   key: string;
 }
 
+// Sarrafiye (sikke) fiyatları için ozandoviz.com/csarrafiye.php sayfasının
+// kullandığı uç nokta — "Yeni" VE "Eski" (antika) sikke fiyatlarını tek
+// istekte, aynı temiz {alis, satis, code} şeklinde döner (stl1-stl6 tek
+// sayılar Yeni, çift sayılar Eski çeşitler). Bu sayfa ayrıca "Has karşılığı"
+// ve "işçilik" ayrıntılarını da sunuyor, ama işçilik verisinde bariz
+// hatalar var (negatif satış değerleri görüldü) — bilerek alınmadı.
+const SARRAFIYE_ENDPOINT = "onlinesarrafiyetlpagedataredis.php";
+
 const PICKS: QuotePick[] = [
   { id: "has-altin", label: "Has Altın", unit: "TRY / gr", endpoint: "centergoldpagedata.php", key: "ALTIN" },
   { id: "gram-altin", label: "Gram Altın", unit: "TRY / gr", endpoint: "centergramgoldpagedata.php", key: "gram13" },
-  { id: "ceyrek-altin", label: "Çeyrek Altın", unit: "TRY / adet", endpoint: "centersarrafiyepagedata.php", key: "stl1" },
-  { id: "yarim-altin", label: "Yarım Altın", unit: "TRY / adet", endpoint: "centersarrafiyepagedata.php", key: "stl3" },
-  { id: "tam-altin", label: "Tam Altın", unit: "TRY / adet", endpoint: "centersarrafiyepagedata.php", key: "stl5" },
-  { id: "ata-besli", label: "Ata Beşli", unit: "TRY / adet", endpoint: "centersarrafiyepagedata.php", key: "stl11" },
+  { id: "ceyrek-yeni", label: "Çeyrek Altın (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl1" },
+  { id: "ceyrek-eski", label: "Çeyrek Altın (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl2" },
+  { id: "yarim-yeni", label: "Yarım Altın (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl3" },
+  { id: "yarim-eski", label: "Yarım Altın (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl4" },
+  { id: "tam-yeni", label: "Tam Altın (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl5" },
+  { id: "tam-eski", label: "Tam Altın (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl6" },
+  { id: "gremse-yeni", label: "Gremse Altın (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl7" },
+  { id: "gremse-eski", label: "Gremse Altın (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl8" },
+  { id: "ata-lirasi-yeni", label: "Ata Lirası (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl9" },
+  { id: "ata-lirasi-eski", label: "Ata Lirası (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl10" },
+  { id: "ata-besli-yeni", label: "Ata Beşli (Yeni)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl11" },
+  { id: "ata-besli-eski", label: "Ata Beşli (Eski)", unit: "TRY / adet", endpoint: SARRAFIYE_ENDPOINT, key: "stl12" },
   { id: "usd", label: "Dolar", unit: "TRY", endpoint: "centerpagedata.php", key: "USDTRY" },
   { id: "eur", label: "Euro", unit: "TRY", endpoint: "centerpagedata.php", key: "EURTRY" },
 ];

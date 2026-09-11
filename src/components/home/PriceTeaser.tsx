@@ -3,7 +3,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getPriceProvider } from "@/lib/prices";
 
-const teaserIds = new Set(["gram-altin", "ceyrek-altin", "usd"]);
+const teaserIds = new Set(["gram-altin", "ceyrek-yeni", "usd"]);
 
 export async function PriceTeaser() {
   const provider = getPriceProvider();

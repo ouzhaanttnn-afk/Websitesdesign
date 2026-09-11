@@ -1,0 +1,333 @@
+# ALVERA KUYUMCULUK — Design System MASTER
+
+Bu doküman Alvera Kuyumculuk web sitesinin tek doğruluk kaynağı (single source of
+truth) olan tasarım sistemidir. Yeni oluşturulan her sayfa ve bileşen bu
+dokümandaki ilkelere, token'lara ve kurallara bağlı kalmalıdır. Stil kararları
+sayfadan sayfaya rastgele değişmez; her yeni ihtiyaç önce burada tanımlanır,
+sonra uygulanır.
+
+Uygulamadaki karşılıklar:
+- Renk / tipografi / spacing / radius / shadow token'ları → `tailwind.config.ts` + `src/app/globals.css`
+- Bileşenler → `src/components/`
+- İçerik/veri config'i → `src/config/`
+
+---
+
+## 1. Brand Personality
+
+**Marka:** Alvera Kuyumculuk
+**Sektör:** Kuyumculuk — Altın, Pırlanta, Mücevher, Saat, premium perakende
+**Konum:** Mamak / Ankara / Türkiye
+**Söylem:** "Zarafet ve güvenin adresi."
+
+**Karakter kelimeleri:** sakin, güvenilir, zamansız, sofistike, sıcak, net.
+
+**Konumlandırma:** Alvera; parlayan, bağıran, "indirim çığlığı atan" bir kuyumcu
+vitrini değildir. Ürünün kendi değerine güvenen, sakin ve editoryal bir sunumu
+tercih eden bir mücevher galerisi gibi davranır. Referans çerçevesi: Apple'ın
+sadeliği + modern premium mücevher markalarının editoryal dili, kuyumculuk
+sektörüne, Türkiye/Ankara bağlamına ve Alvera'nın kendi kimliğine uyarlanmış
+hali. Başka bir markanın birebir kopyası değildir.
+
+**Bilinçli olarak kaçınılanlar:**
+- Aşırı/parlak altın renk kullanımı, altın gradient'ler
+- Klişe "siyah + altın" kuyumcu şablonu
+- Ağır Osmanlı/motif süslemeleri
+- Ucuz e-ticaret görünümü (rozet yığınları, kırmızı indirim etiketleri)
+- Her yüzeye gradient basmak
+- Gereksiz glassmorphism / blur efektleri
+- Aşırı animasyon, sürekli hareket eden elementler
+- Birbirinin aynısı "template kart" yığınları
+
+---
+
+## 2. Design Principles
+
+1. **Sessiz lüks (Quiet luxury).** Statü, gösterişle değil; boşluk, oran ve
+   malzeme kalitesiyle (tipografi, görsel işçiliği) kurulur.
+2. **Ürün kahramandır.** Arayüz geri çekilir, görsele ve ürüne alan açar.
+3. **Bir ana aksan rengi.** Bronz/champagne tonu tüm sayfada *nadiren* ve
+   *kasıtlı* kullanılır — asla zemin rengi olarak değil.
+4. **Editoryal ritim.** Sayfalar SaaS "3 özellik kartı" mantığıyla değil,
+   büyük görsel + kısa metin bloklarının sırayla ilerlediği bir vitrin/dergi
+   mantığıyla kurulur.
+5. **Güven sade anlatılır.** İddialı pazarlama dili yerine kısa, kendinden
+   emin, doğal Türkçe.
+6. **Tutarlılık.** Aynı bileşen, aynı token, her sayfada aynı şekilde davranır.
+7. **Erişilebilirlik pazarlık konusu değildir.** Kontrast, klavye, semantik
+   HTML her bileşende varsayılandır.
+8. **Performans premium'un bir parçasıdır.** Ağır efekt = düşük performans
+   ise kullanılmaz.
+
+---
+
+## 3. Color Palette
+
+Disiplinli, dar bir palet: sıcak ivory zemin + sıcak neredeyse-siyah mürekkep
++ tek bir bronz/champagne aksan. İkinci bir "mücevher rengi" bilinçli olarak
+eklenmedi — sadeliği korumak için.
+
+| Token | Hex (yaklaşık) | Kullanım |
+|---|---|---|
+| `ink` | `#1A1714` | Birincil metin, başlıklar, birincil buton zemini |
+| `ink-soft` | `#4A443C` | İkincil metin, açıklamalar |
+| `ink-faint` | `#6B6458` | Yardımcı metin, placeholder, meta bilgi (WCAG AA 4.5:1+ için koyultuldu) |
+| `canvas` | `#F7F4EE` | Sayfa zemini (sıcak ivory, saf beyaz değil) |
+| `surface` | `#FCFAF6` | Kart / header zemini |
+| `surface-alt` | `#EEE8DD` | Bölüm zıtlaması için alternatif zemin |
+| `border` | `#DDD5C7` | İnce ayraç çizgileri (hairline) |
+| `accent` | `#A9865A` | Bronz/champagne — ikon, ayraç, eyebrow metin, ince detay |
+| `accent-strong` | `#7A5D3A` | Accent hover/aktif hali, focus ring |
+| `error` | `#9C3B34` | Form hata durumları (kısıtlı kullanım) |
+
+**Kurallar:**
+- `accent`, asla büyük düz yüzeylerde (buton zemini, hero arkaplanı) kullanılmaz;
+  ince çizgi, ikon, eyebrow etiketi, hover altçizgisi gibi *detaylarda* kullanılır.
+- Birincil CTA butonu **ink zemin + canvas metin**dir — "altın buton" değildir.
+- Gradient yalnızca çok nadir, çok düşük kontrastlı zemin geçişlerinde (ör.
+  görsel üstü metin okunabilirliği için ince bir scrim) kullanılabilir; dekoratif
+  gradient yasaktır.
+
+---
+
+## 4. Typography
+
+**Display / başlık ailesi:** `Fraunces` (serif, editoryal, sıcak) — `--font-display`
+**Sans / gövde-arayüz ailesi:** `Inter` — `--font-sans`
+
+Başlıklar her zaman `font-display`; gövde metni, form, navigasyon, buton
+etiketleri her zaman `font-sans`.
+
+### Font Scale (`tailwind.config.ts` → `fontSize`)
+
+| Token | Boyut | Kullanım |
+|---|---|---|
+| `display-2xl` | clamp 2.75rem → 4.5rem | Hero H1 |
+| `display-xl` | clamp 2.25rem → 3.25rem | Sayfa başlıkları (H1, iç sayfalar) |
+| `display-lg` | clamp 1.875rem → 2.5rem | Bölüm başlıkları (H2) |
+| `display-md` | clamp 1.5rem → 1.875rem | Alt bölüm başlıkları (H3) |
+| `body-lg` | 1.125rem | Öne çıkan gövde metni / intro paragraf |
+| `body-md` | 1rem | Standart gövde metni |
+| `body-sm` | 0.9375rem | Yardımcı/meta metin, form yardım metni |
+| `eyebrow` | 0.75rem, tracking geniş, uppercase | Kategori etiketi, bölüm öncesi mini başlık |
+
+**Kurallar:**
+- Bir ekranda en fazla 2 display seviyesi birlikte kullanılır.
+- Eyebrow etiketleri her zaman `accent-strong` renginde, uppercase, geniş
+  tracking ile kullanılır (ör. "KOLEKSİYON", "PİYASA").
+- Satır uzunluğu gövde metinlerde ~65-75 karakter (`max-w-prose`) ile sınırlanır.
+
+---
+
+## 5. Spacing System
+
+4px temel birim (Tailwind varsayılan ölçeği). Bölüm dikey boşlukları için tek
+bir utility kullanılır: **`.section-y`** → `py-20 sm:py-24 lg:py-32`
+(≈ 80px / 96px / 128px).
+
+| Kullanım | Değer |
+|---|---|
+| Bileşen içi mikro boşluk | 4–8px |
+| Bileşen içi standart boşluk | 12–24px |
+| Bileşenler arası boşluk | 32–48px |
+| Bölüm içi blok arası | 64–96px |
+| Bölümler arası (`.section-y`) | 80–128px |
+
+Yatay sayfa kapsayıcısı: **`.container-content`** → `max-w-[1280px]`, kenar
+boşluğu `px-5` (mobil) → `px-10` (masaüstü).
+
+---
+
+## 6. Border Radius System
+
+Sessiz lüks sert/keskin köşeleri, aşırı yuvarlanmış "app" görünümünden
+tercih eder.
+
+| Token | Değer | Kullanım |
+|---|---|---|
+| `none` | 0px | Görseller, büyük editoryal bloklar |
+| `sm` | 2px | İnce UI detayları |
+| `DEFAULT` | 4px | Butonlar, input'lar, küçük kartlar |
+| `md` | 6px | Orta kartlar |
+| `lg` | 10px | Büyük yüzey kartları, modal benzeri bloklar |
+| `pill` | 999px | Etiket/badge, tag chip |
+
+---
+
+## 7. Shadows
+
+Çok düşük opasiteli, geniş yayılımlı "ambient" gölgeler. Sert/koyu drop
+shadow kullanılmaz.
+
+- `shadow-soft` → hover öncesi kart durumu
+- `shadow-elevated` → hover / açık dropdown / mobil menü paneli
+
+---
+
+## 8. Buttons
+
+Üç seviye:
+
+1. **Primary** — zemin `ink`, metin `canvas`. Büyük CTA'lar için
+   (`Koleksiyonları Keşfet`). Hover: `ink` %90 opacity + hafif `translate-y`.
+2. **Secondary (outline)** — şeffaf zemin, `1px solid border`, metin `ink`.
+   Hover: zemin `surface-alt`.
+3. **Ghost / Text link** — zemin yok, alt çizgi `underline-offset-4`,
+   hover'da `accent-strong` renk geçişi + alt çizgi animasyonu.
+
+**Ortak kurallar:**
+- Radius: `DEFAULT` (4px).
+- Padding: `px-6 py-3` (orta), `px-8 py-4` (büyük/hero).
+- Etiket: `font-sans`, `text-body-sm`, `font-medium`, hafif `tracking-wide`.
+- Her buton görünür `focus-visible` halkasına sahiptir (bkz. §13).
+- İkonlu butonlarda ikon her zaman metnin sağında, 16–18px.
+
+---
+
+## 9. Cards
+
+- Zemin `surface`, kenar `border` (1px) **veya** `shadow-soft` — ikisi birden
+  kullanılmaz (görsel gürültüyü azaltmak için).
+- Görsel alanı kartın en az %60'ını kaplar, `aspect-[4/5]` veya `aspect-square`.
+- İçerik bloğu: `eyebrow` (opsiyonel) → `display-md` başlık → `body-sm` açıklama
+  → (varsa) fiyat/CTA.
+- Kart grid'leri 2 (mobil) / 3 (tablet) / 3–4 (masaüstü) sütun; asla tek tip
+  "6+ kart" duvarı oluşturulmaz — editoryal blok ile kart grid'i aralanır.
+
+---
+
+## 10. Navigation
+
+**Desktop:**
+- Sticky, `surface` zemin, alt kenarda `border` (1px), yükseklik ~80px.
+- Sol: wordmark ("ALVERA"). Orta/sağ: 5 ana link. En sağ: telefon/İletişim
+  vurgusu (buton veya güçlü text link).
+- Scroll sonrası yükseklik hafifçe daralır (80px → 64px), ani sıçrama yok,
+  `transition-[height]` ile.
+- Aktif sayfa linki `accent-strong` renginde ve `aria-current="page"`.
+
+**Mobile:**
+- Yükseklik ~64px. Sol wordmark, sağda hamburger `button`
+  (`aria-expanded`, `aria-controls`).
+- Menü açıldığında tam ekran panel (`surface` zemin), büyük `display-md`
+  boyutlu link listesi, alt kısımda telefon + Instagram.
+- Body scroll kilidi, `Escape` ile kapanma, odak menü içine hapsedilir (focus trap).
+- Masaüstü header'ın küçültülmüş hali değildir — mobil için yeniden tasarlanmıştır.
+
+---
+
+## 11. Forms
+
+- Her input'un görünür bir `<label>`'ı vardır (placeholder label yerine geçmez).
+- Zemin `surface`, kenar `border`, focus'ta `accent-strong` kenar + halka.
+- Hata durumu: kenar `error`, altında `body-sm` `error` renkli mesaj,
+  `aria-describedby` ile bağlanır.
+- Zorunlu alanlar `*` ile değil, label içinde "(zorunlu)" gibi net bir ifadeyle
+  belirtilir (ekran okuyucu dostu).
+- Gönder butonu her zaman Primary buton stilini kullanır.
+
+---
+
+## 12. Price Components
+
+- Satır bazlı tablo: **Kalem | Alış | Satış**, `tabular-nums` ile hizalı rakamlar.
+- Mobilde tablo yatay scroll yerine kart-satır düzenine döner (her kalem kendi
+  bloğunda: başlık + alış/satış yan yana).
+- Fiyatlar `font-sans font-medium`, `tabular` sınıfı ile.
+- Güncellenme zamanı her zaman `body-sm ink-faint` ile satırın üstünde/altında
+  belirtilir; demo veri kullanıldığında bu açıkça belirtilir (bkz. `PriceProvider`).
+- Fiyat verisi **hiçbir zaman** bileşen içine hard-code edilmez; her zaman
+  `PriceProvider` üzerinden gelir (bkz. `src/lib/prices`).
+
+---
+
+## 13. Image Treatment
+
+- Gerçek ürün/mekân görseli gelene kadar `ImagePlaceholder` bileşeni kullanılır:
+  düz `surface-alt` zemin, ince `border`, ortada küçük bir ikon + görsel
+  açıklaması (ör. "Pırlanta yüzük koleksiyonu görseli"). Asla sahte altın
+  gradient veya stok "jewelry" ikon yığını kullanılmaz.
+- Gerçek görseller eklendiğinde: `next/image`, `object-cover`, tanımlı
+  `sizes`, açıklayıcı `alt` metni zorunludur.
+- Görsel oranları sabit tutulur (`aspect-[4/5]` ürün, `aspect-[16/9]` /
+  `aspect-[3/2]` editoryal geniş görsel) — layout shift'i önlemek için.
+- Radius: `none` (görseller köşeli/editoryal kalır, kartın kendi radius'u
+  görseli kırpmaz).
+
+---
+
+## 14. Grid & Breakpoints
+
+Tailwind varsayılan breakpoint'leri + `1440px` için ek `3xl` token'ı kullanılır.
+Test edilen genişlikler: **375 / 390 / 430 / 768 / 1024 / 1280 / 1440px.**
+
+| Breakpoint | Sütun sayısı (kart grid) |
+|---|---|
+| < 640px (mobil) | 1–2 |
+| ≥ 768px (tablet) | 2–3 |
+| ≥ 1024px (masaüstü) | 3 |
+| ≥ 1280px (geniş masaüstü) | 3–4 |
+
+Mobil tasarım, masaüstünün küçültülmüş hâli değildir: mobilde başlık ölçeği,
+satır uzunluğu ve boşluklar mobile göre yeniden dengelenir (bkz. `clamp()`
+tabanlı `display-*` font ölçeği).
+
+---
+
+## 15. Motion Principles
+
+**Kullanılabilir:**
+- Scroll'da hafif fade + `translate-y-3` giriş (`RevealOnScroll` bileşeni).
+- Görsel hover'da yumuşak `scale-[1.02]`, `duration-700 ease-quiet`.
+- Metin/CTA hover'da renk ve alt çizgi geçişi, `duration-300`.
+- Mobil menü açılışında yumuşak fade/slide.
+
+**Kaçınılır:**
+- Sürekli döngüde oynayan elementler (marquee, infinite bounce).
+- Büyük `scale` sıçramaları, "bouncy" spring easing.
+- Sayfa geçişlerinde gösterişli efektler.
+- Performansı düşüren ağır blur/parallax katmanları.
+
+**Erişilebilirlik:** Tüm animasyonlar `prefers-reduced-motion: reduce`
+sorgusunda anında devre dışı kalır (bkz. `globals.css`).
+
+---
+
+## 16. Accessibility Rules
+
+- Semantik HTML: `header`, `nav`, `main`, `footer`, `section`, doğru başlık
+  hiyerarşisi (tek `h1`/sayfa).
+- "İçeriğe geç" (skip link) her sayfada, klavye ile ilk `Tab`'da görünür.
+- Tüm etkileşimli elemanlarda görünür `focus-visible` hali (bkz. `globals.css`).
+- Kontrast: gövde metni/zemin en az **4.5:1**, büyük başlıklar en az **3:1**.
+- Tüm görsellerde (placeholder dahil) açıklayıcı `alt`; dekoratif görsellerde
+  `alt=""`.
+- Form alanlarında `label`/`aria-describedby`; hata mesajları programatik
+  olarak alanla ilişkilendirilir.
+- Mobil menü: `aria-expanded`, `aria-controls`, odak hapsi, `Escape` ile kapama.
+- Dokunma hedefleri en az 44×44px.
+
+---
+
+## 17. Mobile Behavior
+
+- Navigasyon: bkz. §10 (tam ekran panel, ayrı tasarım).
+- Hero: tek sütun, görsel üstte veya arka planda güçlü ama metin okunabilirliği
+  korunarak (scrim), CTA'lar tam genişlik/yan yana değil alt alta.
+  Section: 1 sütun.
+- Fiyat tablosu: kart-satır düzeni (bkz. §12).
+- Dokunmatik hedefler ve form alanları büyütülür (`py-3.5` min).
+- Sticky header yüksekliği mobilde daha kısa tutulur (performans + alan).
+
+---
+
+## Değişiklik Disiplini
+
+Bu dosya, tasarım sisteminin **tek kaynağıdır**. Yeni bir bileşen ihtiyacı
+doğduğunda:
+
+1. Önce bu dokümana token/ilke olarak eklenir.
+2. Sonra `tailwind.config.ts` / `globals.css` güncellenir.
+3. Son olarak bileşen/sayfa kodu yazılır.
+
+Sayfa bazlı "özel istisna" stiller oluşturulmaz.

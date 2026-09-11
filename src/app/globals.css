@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-ink: 26 23 20;
+  --color-ink-soft: 74 68 60;
+  --color-ink-faint: 107 100 88;
+  --color-canvas: 247 244 238;
+  --color-surface: 252 250 246;
+  --color-surface-alt: 238 232 221;
+  --color-border: 221 213 199;
+  --color-accent: 169 134 90;
+  --color-accent-strong: 122 93 58;
+  --color-error: 156 59 52;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-accent-strong));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: rgb(var(--color-accent) / 0.22);
+    color: rgb(var(--color-ink));
+  }
+}
+
+@layer utilities {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8 lg:px-10;
+  }
+
+  .section-y {
+    @apply py-20 sm:py-24 lg:py-32;
+  }
+
+  .eyebrow {
+    @apply font-sans text-eyebrow font-medium uppercase tracking-widest text-accent-strong;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,17 @@
+import { Hero } from "@/components/home/Hero";
+import { CategoryShowcase } from "@/components/home/CategoryShowcase";
+import { PriceTeaser } from "@/components/home/PriceTeaser";
+import { AboutTeaser } from "@/components/home/AboutTeaser";
+import { ContactCta } from "@/components/home/ContactCta";
+
+export default function HomePage() {
+  return (
+    <>
+      <Hero />
+      <CategoryShowcase />
+      <PriceTeaser />
+      <AboutTeaser />
+      <ContactCta />
+    </>
+  );
+}

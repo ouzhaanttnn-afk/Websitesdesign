@@ -1,0 +1,75 @@
+import type { PriceSnapshot } from "@/lib/prices";
+
+function formatNumber(value: number) {
+  return value.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function formatUpdatedAt(iso: string) {
+  return new Date(iso).toLocaleString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
+  return (
+    <div>
+      <div className="flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-body-sm text-ink-faint">
+          Son güncelleme: <span className="tabular">{formatUpdatedAt(snapshot.updatedAt)}</span>
+        </p>
+        {!snapshot.isLive && (
+          <p className="text-body-sm font-medium text-accent-strong">Demo veri — anlık piyasa verisi değildir</p>
+        )}
+      </div>
+
+      {/* Masaüstü: tablo */}
+      <table className="mt-4 hidden w-full border-collapse sm:table">
+        <caption className="sr-only">Güncel altın ve döviz alış/satış fiyatları</caption>
+        <thead>
+          <tr className="border-b border-border text-left">
+            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Kalem</th>
+            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Alış</th>
+            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Satış</th>
+            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Birim</th>
+          </tr>
+        </thead>
+        <tbody>
+          {snapshot.quotes.map((quote) => (
+            <tr key={quote.id} className="border-b border-border">
+              <th scope="row" className="py-5 text-body-md font-medium text-ink">
+                {quote.label}
+              </th>
+              <td className="tabular py-5 text-body-md text-ink-soft">{formatNumber(quote.buy)}</td>
+              <td className="tabular py-5 text-body-md font-medium text-ink">{formatNumber(quote.sell)}</td>
+              <td className="py-5 text-body-sm text-ink-faint">{quote.unit}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Mobil: kart-satır düzeni */}
+      <ul className="mt-4 flex flex-col divide-y divide-border sm:hidden">
+        {snapshot.quotes.map((quote) => (
+          <li key={quote.id} className="py-5">
+            <p className="text-body-md font-medium text-ink">{quote.label}</p>
+            <p className="mt-1 text-body-sm text-ink-faint">{quote.unit}</p>
+            <div className="mt-3 flex items-center gap-6">
+              <div>
+                <p className="text-body-sm text-ink-faint">Alış</p>
+                <p className="tabular text-body-md text-ink-soft">{formatNumber(quote.buy)}</p>
+              </div>
+              <div>
+                <p className="text-body-sm text-ink-faint">Satış</p>
+                <p className="tabular text-body-md font-medium text-ink">{formatNumber(quote.sell)}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

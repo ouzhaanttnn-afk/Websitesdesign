@@ -4,7 +4,10 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/layout/SkipLink";
+import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
+import { StructuredData } from "@/components/StructuredData";
 import { brand } from "@/config/brand";
+import { siteUrl } from "@/lib/site-url";
 
 // UI/UX Pro Max skill — "Luxury Serif" font pairing, verified specifically
 // for jewelry/luxury e-commerce (bkz. design-system/MASTER.md §4).
@@ -22,15 +25,6 @@ const montserrat = Montserrat({
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
-
-// Vercel bu değişkeni her deploy'da otomatik ayarlar; yoksa (yerel geliştirme)
-// localhost'a düşer. Gerçek bir alan adı bağlanınca NEXT_PUBLIC_SITE_URL
-// olarak elle de ayarlanabilir.
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-  ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
-  : process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -60,10 +54,12 @@ export default function RootLayout({
   return (
     <html lang="tr" className={`${cormorant.variable} ${montserrat.variable}`}>
       <body>
+        <StructuredData />
         <SkipLink />
         <Header />
         <main id="main-content">{children}</main>
         <Footer />
+        <WhatsAppFab />
       </body>
     </html>
   );

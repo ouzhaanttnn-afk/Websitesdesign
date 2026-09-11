@@ -408,6 +408,28 @@ sorgusunda anında devre dışı kalır (bkz. `globals.css`).
 
 ---
 
+## 18. SEO & Yapısal Veri
+
+- `src/app/robots.ts` ve `src/app/sitemap.ts` — Next.js metadata route
+  convention'ı ile otomatik `/robots.txt` ve `/sitemap.xml` üretir.
+- `src/components/StructuredData.tsx` — `schema.org` `JewelryStore` JSON-LD
+  yapısal verisi (`layout.tsx`'te tüm sayfalara eklenir). Yalnızca
+  doğrulanmış alanlar (isim, adres, telefon, Instagram) içerir;
+  `openingHoursSpecification` gibi doğrulanmamış alanlar eklenmez.
+- `src/lib/site-url.ts` — `metadataBase`, sitemap ve OG görseli için tek,
+  paylaşılan site URL kaynağı (Vercel'in `VERCEL_URL` değişkenine düşer).
+
+## 19. WhatsApp FAB — Tek İstisna
+
+`src/components/layout/WhatsAppFab.tsx`, tüm sayfalarda sağ altta sabit
+duran bir hızlı erişim butonudur. §3'teki "tek aksan rengi" kuralının
+**bilinçli tek istisnasıdır**: WhatsApp'ın kendi tanınabilir yeşili
+(`#25D366`) kullanılır, çünkü bu dekoratif bir marka rengi değil, işlevsel
+ve evrensel olarak tanınan bir yardımcı simgedir (bir telefon ikonu gibi).
+Boyutu küçük tutulur, ekranı domine etmez; "sessiz lüks" disiplinini bozmaz.
+
+---
+
 ## Değişiklik Disiplini
 
 Bu dosya, tasarım sisteminin **tek kaynağıdır**. Yeni bir bileşen ihtiyacı

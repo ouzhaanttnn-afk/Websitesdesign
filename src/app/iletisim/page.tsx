@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { brand } from "@/config/brand";
 import { contact } from "@/config/contact";
+
+const mapsQuery = encodeURIComponent(`${brand.name}, ${brand.addressLine}`);
 
 export const metadata: Metadata = {
   title: "İletişim",
@@ -75,15 +76,26 @@ export default function ContactPage() {
               </div>
             </dl>
 
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(brand.addressLine)}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="block transition-opacity duration-300 ease-quiet hover:opacity-90"
-              aria-label="Alvera Kuyumculuk konumunu Google Haritalar'da aç"
-            >
-              <ImagePlaceholder label="Alvera Kuyumculuk konum / harita görseli — Google Haritalar'da açmak için tıklayın" aspect="aspect-[4/3]" />
-            </a>
+            <div>
+              <div className="aspect-[4/3] w-full overflow-hidden border border-border grayscale-[15%]">
+                <iframe
+                  title="Alvera Kuyumculuk konumu"
+                  src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`}
+                  className="h-full w-full"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-3 inline-block text-body-sm font-medium text-ink underline decoration-border underline-offset-4 transition-colors duration-300 ease-quiet hover:text-accent-strong hover:decoration-accent-strong"
+              >
+                Google Haritalar&apos;da yol tarifi alın
+              </a>
+            </div>
           </div>
 
           <div className="rounded-lg border border-border bg-surface p-8 sm:p-10">

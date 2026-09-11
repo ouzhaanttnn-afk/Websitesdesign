@@ -43,13 +43,13 @@ metnini** kullanın.
 
 | Alan | Konum | Açıklama |
 |---|---|---|
-| Konum / harita görseli | `src/app/iletisim/page.tsx` | 4:3 oranlı; gerçek harita/konum görüntüsü veya embed harita ile değiştirilebilir. |
+| Konum / harita | `src/app/iletisim/page.tsx` | **Tamamlandı.** Placeholder yerine gerçek adresle çalışan bir Google Haritalar `iframe` gömülü (API anahtarı gerektirmeyen embed formatı) + "Yol tarifi al" linki. |
 
 ## 6. Doğrulanamayan Metin Verileri
 
 | Alan | Şu anki değer | Not |
 |---|---|---|
-| Açık adres | "Cengizhan Mahallesi, Natoyolu Cad. No: 209/C, Mamak / Ankara" | **Doğrulandı** (kartvizitten, `src/config/brand.ts`). İletişim sayfasındaki harita placeholder'ı bu adresle Google Haritalar aramasına bağlandı. |
+| Açık adres | "Cengizhan Mahallesi, Natoyolu Cad. No: 209/C, Mamak / Ankara" | **Doğrulandı** (kartvizitten, `src/config/brand.ts` + `brand.address` — JSON-LD yapısal veri için ayrı alanlara da bölündü). |
 | WhatsApp numarası | +90 533 485 30 40 | **Doğrulandı** (kartvizitten, `src/config/contact.ts`). Mağaza sabit hattından (+90 312 390 24 25) farklı, ayrı bir cep numarası — önceki sürümde yanlışlıkla sabit hat kullanılıyordu, düzeltildi. |
 | Çalışma saatleri | "Çalışma saatleri yakında eklenecek" | Hâlâ doğrulanmış bilgi yok, placeholder olarak kalıyor (`src/config/brand.ts`). |
 

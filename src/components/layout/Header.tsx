@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { primaryNav } from "@/config/navigation";
 import { contact } from "@/config/contact";
 import { brand } from "@/config/brand";
-import { GemMotif } from "@/components/ui/GemMotif";
 
 export function Header() {
   const pathname = usePathname();
@@ -80,13 +80,15 @@ export function Header() {
         }`}
       >
         <div className="container-content flex h-full items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 text-ink"
-            aria-label={`${brand.name} — anasayfa`}
-          >
-            <GemMotif strokeWidth={3} className="h-4 w-4 text-accent-strong" />
-            <span className="font-sans text-lg font-bold tracking-[0.12em] text-accent-strong">ALVERA</span>
+          <Link href="/" className="flex items-center" aria-label={`${brand.name} — anasayfa`}>
+            <Image
+              src="/brand/alvera-logo.png"
+              alt=""
+              width={644}
+              height={233}
+              priority
+              className="h-8 w-auto sm:h-9"
+            />
           </Link>
 
           <nav aria-label="Ana navigasyon" className="hidden md:block">

@@ -44,7 +44,7 @@ export default function ContactPage() {
                     rel="noreferrer noopener"
                     className="text-body-lg text-ink underline decoration-border underline-offset-4 transition-colors duration-300 ease-quiet hover:text-accent-strong hover:decoration-accent-strong"
                   >
-                    {contact.phoneDisplay}
+                    {contact.whatsappDisplay}
                   </a>
                 </dd>
               </div>
@@ -75,7 +75,15 @@ export default function ContactPage() {
               </div>
             </dl>
 
-            <ImagePlaceholder label="Alvera Kuyumculuk konum / harita görseli" aspect="aspect-[4/3]" />
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(brand.addressLine)}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="block transition-opacity duration-300 ease-quiet hover:opacity-90"
+              aria-label="Alvera Kuyumculuk konumunu Google Haritalar'da aç"
+            >
+              <ImagePlaceholder label="Alvera Kuyumculuk konum / harita görseli — Google Haritalar'da açmak için tıklayın" aspect="aspect-[4/3]" />
+            </a>
           </div>
 
           <div className="rounded-lg border border-border bg-surface p-8 sm:p-10">

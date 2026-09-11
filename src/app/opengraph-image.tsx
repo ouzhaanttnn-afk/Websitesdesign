@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { brand } from "@/config/brand";
 
@@ -6,6 +8,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OpengraphImage() {
+  const logoBuffer = await readFile(join(process.cwd(), "public/brand/alvera-logo-gold.png"));
+  const logoSrc = `data:image/png;base64,${logoBuffer.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -43,17 +48,7 @@ export default async function OpengraphImage() {
         >
           {brand.locationLabel}
         </div>
-        <div
-          style={{
-            display: "flex",
-            fontSize: 104,
-            fontWeight: 700,
-            letterSpacing: 10,
-            color: "#C9982F",
-          }}
-        >
-          ALVERA
-        </div>
+        <img src={logoSrc} width={520} height={188} alt="" />
         <div
           style={{
             display: "flex",

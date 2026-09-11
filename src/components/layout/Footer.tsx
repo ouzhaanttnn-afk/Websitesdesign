@@ -1,18 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 import { brand } from "@/config/brand";
 import { contact } from "@/config/contact";
 import { primaryNav } from "@/config/navigation";
-import { GemMotif } from "@/components/ui/GemMotif";
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="container-content grid gap-12 py-16 sm:py-20 md:grid-cols-3">
         <div>
-          <p className="flex items-center gap-2.5">
-            <GemMotif strokeWidth={3} className="h-4 w-4 text-accent-strong" />
-            <span className="font-sans text-lg font-bold tracking-[0.12em] text-accent-strong">ALVERA</span>
-          </p>
+          <Image src="/brand/alvera-logo.png" alt={brand.name} width={644} height={233} className="h-8 w-auto" />
           <p className="mt-3 max-w-[32ch] text-body-sm text-ink-soft">{brand.tagline}</p>
           <p className="mt-1 text-body-sm text-ink-faint">{brand.locationLabel}</p>
         </div>

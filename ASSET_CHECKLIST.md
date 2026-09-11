@@ -13,9 +13,8 @@ metnini** kullanın.
 
 | Alan | Konum | Durum |
 |---|---|---|
-| Logo — mağaza tabela fotoğrafı | `design-system/brand-assets/alvera-store-signage.jpg` | **Alındı.** Gerçek tabelanın fotoğrafı; wordmark'ın tipografi/renk karakterini (kalın sans-serif, altın) kalibre etmek için kullanıldı (bkz. `design-system/MASTER.md` §10). Kendisi doğrudan sitede kullanılmıyor (ham fotoğraf, kırpılmamış/arka plan temizlenmemiş). |
-| Logo — temiz vektör/PNG dosyası | `src/components/layout/Header.tsx`, `src/components/layout/Footer.tsx` | **Hâlâ eksik.** Şu an tabelaya sadık bir metin wordmark'ı (`font-sans font-bold`, altın renk) kullanılıyor. Kenarları temiz, arka planı şeffaf bir logo dosyası (SVG/PNG) verilirse `next/image` ile birebir değiştirilebilir. |
-| Favicon / site ikonu | `src/app/icon.svg`, `src/app/favicon.ico` | Şu an marka renklerinden üretilmiş basit bir mücevher ikonu kullanılıyor (gerçek logodan değil). |
+| Logo | `public/brand/alvera-logo.png` (ink), `public/brand/alvera-logo-gold.png` (koyu zeminler için) | **Alındı ve kullanılıyor.** Kullanıcının paylaştığı kartvizit fotoğrafından (`design-system/brand-assets/alvera-business-card.jpg`) kırpıldı; arka plan (kartvizit deseni) luminance-tabanlı alfa maskeleme ile temizlenip şeffaf PNG'e dönüştürüldü. Header ve Footer'da `next/image` ile kullanılıyor. **Not:** Kaynak bir telefon fotoğrafı (644×233px) — düşük çözünürlük gerektiren büyük kullanımlar (ör. büyük bir hero logosu) için tasarımcıdan orijinal vektör (AI/SVG/EPS) dosyası istenmesi önerilir. |
+| Favicon / site ikonu | `src/app/icon.svg`, `src/app/favicon.ico` | Şu an marka renklerinden üretilmiş basit bir mücevher ikonu kullanılıyor (gerçek logodan değil — küçük boyutta "ALVERA" yazısı okunaksız kalacağı için kasıtlı olarak soyut bırakıldı). |
 
 ## 2. Ana Sayfa (`/`)
 
@@ -48,16 +47,14 @@ metnini** kullanın.
 
 ## 6. Doğrulanamayan Metin Verileri
 
-Aşağıdaki alanlar, doğrulanmış bilgi elimizde olmadığı için **placeholder**
-olarak bırakıldı (`src/config/brand.ts`):
-
 | Alan | Şu anki değer | Not |
 |---|---|---|
-| Açık adres | "Adres bilgisi yakında eklenecek" | Sadece "Mamak / Ankara" doğrulanmış konum bilgisi olarak kullanıldı. |
-| Çalışma saatleri | "Çalışma saatleri yakında eklenecek" | — |
+| Açık adres | "Cengizhan Mahallesi, Natoyolu Cad. No: 209/C, Mamak / Ankara" | **Doğrulandı** (kartvizitten, `src/config/brand.ts`). İletişim sayfasındaki harita placeholder'ı bu adresle Google Haritalar aramasına bağlandı. |
+| WhatsApp numarası | +90 533 485 30 40 | **Doğrulandı** (kartvizitten, `src/config/contact.ts`). Mağaza sabit hattından (+90 312 390 24 25) farklı, ayrı bir cep numarası — önceki sürümde yanlışlıkla sabit hat kullanılıyordu, düzeltildi. |
+| Çalışma saatleri | "Çalışma saatleri yakında eklenecek" | Hâlâ doğrulanmış bilgi yok, placeholder olarak kalıyor (`src/config/brand.ts`). |
 
-Bu iki alan `src/config/brand.ts` dosyasından güncellenince site genelinde
-(footer, hakkımızda, iletişim) otomatik olarak değişir.
+Bu alanlar `src/config/brand.ts` / `src/config/contact.ts` dosyalarından
+güncellenince site genelinde otomatik olarak değişir.
 
 ## 7. Fiyat Verisi
 

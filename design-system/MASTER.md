@@ -248,15 +248,23 @@ shadow kullanılmaz.
 
 ## 10. Navigation
 
-**Wordmark:** Mağaza tabelasının gerçek fotoğrafı incelendi (bkz.
-`design-system/brand-assets/alvera-store-signage.jpg`) — gerçek Alvera
-logosu **kalın, sans-serif, harf aralığı açılmış, altın renkli** büyük
-harflerden oluşuyor (metal kanal harf tabela). Site genelindeki başlıklarda
-kullanılan ince `Cormorant` serif yerine, "ALVERA" wordmark'ı özellikle bu
-gerçek kimliğe sadık kalacak şekilde **`font-sans font-bold tracking-[0.12em]
-text-accent-strong`** ile render edilir (Header, Footer, OG görseli). Bu,
-tek istisnadır: diğer tüm başlıklar §4'teki `font-display` kuralına bağlı
-kalır, yalnızca marka adının kendisi gerçek tabelayla eşleşir.
+**Wordmark:** Kullanıcının paylaştığı gerçek kartvizit fotoğrafından
+(`design-system/brand-assets/alvera-business-card.jpg`) çıkarılan, arka
+planı temizlenmiş gerçek Alvera logosu kullanılır — diamond/gem aksanlı
+kaligrafik "A" + yüksek kontrastlı serif "LVERA" + altında ince aralıklı
+"KUYUMCULUK" ve iki yanında çizgi flourish. İşlenmiş dosyalar:
+
+- `public/brand/alvera-logo.png` — ink (`#1A1714`) renkli, açık zeminler için (Header, Footer)
+- `public/brand/alvera-logo-gold.png` — altın renkli, koyu zeminler için (OG görseli; ileride Hero/ContactCta gibi koyu bölümlerde kullanılabilir)
+
+Her ikisi de `next/image` ile, orijinal en-boy oranı (644×233) korunarak
+render edilir. Mağaza tabelasının fotoğrafı (`alvera-store-signage.jpg`,
+daha önceki bir turda incelenmişti) artık ikincil referans; kartvizitteki
+temiz baskı, tabeladaki perspektif/parlama sorunlarından arınmış olduğu
+için birincil kaynak olarak kullanıldı. Site genelindeki diğer başlıklar
+(navigasyon, sayfa başlıkları) hâlâ §4'teki `Cormorant` `font-display`
+kuralına bağlıdır — yalnızca marka adının kendisi gerçek logo görseliyle
+render edilir.
 
 **Desktop:**
 - Sticky, `surface` zemin, alt kenarda `border` (1px), yükseklik ~80px.

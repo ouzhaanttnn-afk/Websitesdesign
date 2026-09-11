@@ -105,7 +105,7 @@ gerekir:
 
 | Alan | Şu anki durum | Üretim öncesi yapılması gereken |
 |---|---|---|
-| Veritabanı | `node:sqlite` (`os.tmpdir()` içinde geçici dosya) | Vercel'in serverless dosya sistemi salt-okunurdur (yalnızca `/tmp` yazılabilir, o da kalıcı değil) — gerçek müşteri/lead verisi için Supabase/Postgres gibi kalıcı bir veritabanı bağlanmalı. Mimari (`src/domains/*/repository.ts`) buna hazır — bkz. README "Lead Engine" bölümü. |
+| Veritabanı | **Vercel Postgres (Neon)** — `POSTGRES_URL` ile bağlı, gerçek/kalıcı | Tamamlandı. (İlk sürümde `node:sqlite`/`os.tmpdir()` kullanılmıştı ama Vercel'de her route ayrı bir serverless fonksiyon olabildiğinden, admin'in eklediği ürün müşteri sayfasında görünmüyordu — canlıda tespit edilip gerçek Postgres'e geçildi, bkz. README "Veritabanı" bölümü.) |
 | Admin şifresi | `.env.local`'de tek bir paylaşımlı şifre (gitignore'da) | Vercel proje ayarlarından **farklı, güçlü** bir `ADMIN_PASSWORD` ve `ADMIN_SESSION_SECRET` girilmeli. |
 | Ürün fotoğrafları | Admin panelinden yüklenen görseller tarayıcıda küçültülüp veritabanında base64 olarak saklanıyor | Ölçeklenebilirlik için ayrı bir dosya depolama servisine (Supabase Storage/Vercel Blob) geçilmesi önerilir. |
 | Piyasa değerleri (Gram Altın/22-18-14 Ayar/Dolar/Euro) | Admin'in `/admin/piyasa`'dan elle girdiği değerler, ürün fiyat hesaplamasında kullanılıyor | Bilinçli olarak `/fiyatlar` sayfasındaki canlı Ozan Döviz ticker'ına **bağlanmadı** (proje talebi §10: "Gerçek harici altın API'sini henüz bağlama"). İleride otomatik senkronize edilmek istenirse `ManualPriceProvider` yerine yeni bir `LivePriceProvider` yazılır. |

@@ -34,89 +34,86 @@ function toLead(row: LeadRow): Lead {
   };
 }
 
-export function createLead(input: LeadInput): Lead {
-  const db = getDb();
+export async function createLead(input: LeadInput): Promise<Lead> {
+  const db = await getDb();
   const id = randomUUID();
   const now = new Date().toISOString();
 
-  db.prepare(
+  await db.query(
     `INSERT INTO leads
       (id, type, product_id, product_sku, product_name, customer_name, customer_phone, message, source, page_url, status, created_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,'NEW',?)`,
-  ).run(
-    id,
-    input.type,
-    input.productId ?? null,
-    input.productSku ?? null,
-    input.productName ?? null,
-    input.customerName ?? null,
-    input.customerPhone ?? null,
-    input.message ?? null,
-    input.source ?? null,
-    input.pageUrl ?? null,
-    now,
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'NEW',$11)`,
+    [
+      id,
+      input.type,
+      input.productId ?? null,
+      input.productSku ?? null,
+      input.productName ?? null,
+      input.customerName ?? null,
+      input.customerPhone ?? null,
+      input.message ?? null,
+      input.source ?? null,
+      input.pageUrl ?? null,
+      now,
+    ],
   );
 
-  const row = db.prepare("SELECT * FROM leads WHERE id = ?").get(id) as unknown as LeadRow;
-  return toLead(row);
+  const { rows } = await db.query("SELECT * FROM leads WHERE id = $1", [id]);
+  return toLead(rows[0] as LeadRow);
 }
 
-export function listLeads(filter: LeadFilter = {}): Lead[] {
-  const db = getDb();
+export async function listLeads(filter: LeadFilter = {}): Promise<Lead[]> {
+  const db = await getDb();
   const clauses: string[] = [];
   const params: string[] = [];
   if (filter.status) {
-    clauses.push("status = ?");
     params.push(filter.status);
+    clauses.push(`status = $${params.length}`);
   }
   if (filter.type) {
-    clauses.push("type = ?");
     params.push(filter.type);
+    clauses.push(`type = $${params.length}`);
   }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-  const rows = db
-    .prepare(`SELECT * FROM leads ${where} ORDER BY created_at DESC`)
-    .all(...params) as unknown as LeadRow[];
-  return rows.map(toLead);
+  const { rows } = await db.query(`SELECT * FROM leads ${where} ORDER BY created_at DESC`, params);
+  return (rows as LeadRow[]).map(toLead);
 }
 
-export function getLeadById(id: string): Lead | null {
-  const db = getDb();
-  const row = db.prepare("SELECT * FROM leads WHERE id = ?").get(id) as LeadRow | undefined;
-  return row ? toLead(row) : null;
+export async function getLeadById(id: string): Promise<Lead | null> {
+  const db = await getDb();
+  const { rows } = await db.query("SELECT * FROM leads WHERE id = $1", [id]);
+  return rows[0] ? toLead(rows[0] as LeadRow) : null;
 }
 
-export function updateLeadStatus(id: string, status: LeadStatus): Lead | null {
-  const db = getDb();
-  db.prepare("UPDATE leads SET status = ? WHERE id = ?").run(status, id);
+export async function updateLeadStatus(id: string, status: LeadStatus): Promise<Lead | null> {
+  const db = await getDb();
+  await db.query("UPDATE leads SET status = $1 WHERE id = $2", [status, id]);
   return getLeadById(id);
 }
 
-export function countLeadsByStatus(): Record<LeadStatus, number> {
-  const db = getDb();
-  const rows = db.prepare("SELECT status, COUNT(*) as count FROM leads GROUP BY status").all() as unknown as {
-    status: LeadStatus;
-    count: number;
-  }[];
+export async function countLeadsByStatus(): Promise<Record<LeadStatus, number>> {
+  const db = await getDb();
+  const { rows } = await db.query("SELECT status, COUNT(*)::int as count FROM leads GROUP BY status");
   const result: Record<LeadStatus, number> = { NEW: 0, CONTACTED: 0, WON: 0, LOST: 0 };
-  for (const row of rows) result[row.status] = row.count;
+  for (const row of rows as { status: LeadStatus; count: number }[]) result[row.status] = row.count;
   return result;
 }
 
-export function countLeadsToday(): number {
-  const db = getDb();
+export async function countLeadsToday(): Promise<number> {
+  const db = await getDb();
   const todayPrefix = new Date().toISOString().slice(0, 10);
-  const row = db
-    .prepare("SELECT COUNT(*) as count FROM leads WHERE created_at LIKE ?")
-    .get(`${todayPrefix}%`) as { count: number };
-  return row.count;
+  const { rows } = await db.query("SELECT COUNT(*)::int as count FROM leads WHERE created_at LIKE $1", [
+    `${todayPrefix}%`,
+  ]);
+  return (rows[0] as { count: number }).count;
 }
 
-export function countLeadsTodayByType(type: Lead["type"]): number {
-  const db = getDb();
+export async function countLeadsTodayByType(type: Lead["type"]): Promise<number> {
+  const db = await getDb();
   const todayPrefix = new Date().toISOString().slice(0, 10);
-  const row = db
-    .prepare("SELECT COUNT(*) as count FROM leads WHERE type = ? AND created_at LIKE ?")
-    .get(type, `${todayPrefix}%`) as { count: number };
-  return row.count;
+  const { rows } = await db.query(
+    "SELECT COUNT(*)::int as count FROM leads WHERE type = $1 AND created_at LIKE $2",
+    [type, `${todayPrefix}%`],
+  );
+  return (rows[0] as { count: number }).count;
 }

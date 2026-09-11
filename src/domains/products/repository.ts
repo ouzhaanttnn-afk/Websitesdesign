@@ -45,152 +45,155 @@ function toProduct(row: ProductRow): Product {
   };
 }
 
-function slugExists(slug: string, excludeId?: string): boolean {
-  const db = getDb();
-  const row = db
-    .prepare(`SELECT id FROM products WHERE slug = ? ${excludeId ? "AND id != ?" : ""}`)
-    .get(...(excludeId ? [slug, excludeId] : [slug]));
-  return !!row;
+async function slugExists(slug: string, excludeId?: string): Promise<boolean> {
+  const db = await getDb();
+  const { rows } = await db.query(
+    `SELECT id FROM products WHERE slug = $1 ${excludeId ? "AND id != $2" : ""}`,
+    excludeId ? [slug, excludeId] : [slug],
+  );
+  return rows.length > 0;
 }
 
-export function listProducts(filter: ProductFilter = {}): Product[] {
-  const db = getDb();
+export async function listProducts(filter: ProductFilter = {}): Promise<Product[]> {
+  const db = await getDb();
   const clauses: string[] = [];
   const params: (string | number)[] = [];
 
   if (filter.category) {
-    clauses.push("category = ?");
     params.push(filter.category);
+    clauses.push(`category = $${params.length}`);
   }
   if (filter.stockStatus) {
-    clauses.push("stock_status = ?");
     params.push(filter.stockStatus);
+    clauses.push(`stock_status = $${params.length}`);
   }
   if (filter.visibleOnly) {
     clauses.push("is_visible = 1 AND stock_status != 'HIDDEN'");
   }
   if (filter.query) {
-    clauses.push("(name LIKE ? OR sku LIKE ?)");
     const like = `%${filter.query}%`;
-    params.push(like, like);
+    params.push(like);
+    const namePos = params.length;
+    params.push(like);
+    const skuPos = params.length;
+    clauses.push(`(name ILIKE $${namePos} OR sku ILIKE $${skuPos})`);
   }
 
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-  const rows = db
-    .prepare(`SELECT * FROM products ${where} ORDER BY created_at DESC`)
-    .all(...params) as unknown as ProductRow[];
-  return rows.map(toProduct);
+  const { rows } = await db.query(`SELECT * FROM products ${where} ORDER BY created_at DESC`, params);
+  return (rows as ProductRow[]).map(toProduct);
 }
 
-export function getProductBySlug(slug: string): Product | null {
-  const db = getDb();
-  const row = db.prepare("SELECT * FROM products WHERE slug = ?").get(slug) as ProductRow | undefined;
-  return row ? toProduct(row) : null;
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const db = await getDb();
+  const { rows } = await db.query("SELECT * FROM products WHERE slug = $1", [slug]);
+  return rows[0] ? toProduct(rows[0] as ProductRow) : null;
 }
 
-export function getProductById(id: string): Product | null {
-  const db = getDb();
-  const row = db.prepare("SELECT * FROM products WHERE id = ?").get(id) as ProductRow | undefined;
-  return row ? toProduct(row) : null;
+export async function getProductById(id: string): Promise<Product | null> {
+  const db = await getDb();
+  const { rows } = await db.query("SELECT * FROM products WHERE id = $1", [id]);
+  return rows[0] ? toProduct(rows[0] as ProductRow) : null;
 }
 
 /** Görünür/satılabilir ürünler arasından, aynı kategoriden, verilen ürün hariç. "Benzer ürünler" için. */
-export function listSimilarProducts(product: Product, limit = 4): Product[] {
-  const db = getDb();
-  const rows = db
-    .prepare(
-      `SELECT * FROM products
-       WHERE category = ? AND id != ? AND is_visible = 1 AND stock_status IN ('AVAILABLE','RESERVED')
-       ORDER BY created_at DESC LIMIT ?`,
-    )
-    .all(product.category, product.id, limit) as unknown as ProductRow[];
-  return rows.map(toProduct);
+export async function listSimilarProducts(product: Product, limit = 4): Promise<Product[]> {
+  const db = await getDb();
+  const { rows } = await db.query(
+    `SELECT * FROM products
+     WHERE category = $1 AND id != $2 AND is_visible = 1 AND stock_status IN ('AVAILABLE','RESERVED')
+     ORDER BY created_at DESC LIMIT $3`,
+    [product.category, product.id, limit],
+  );
+  return (rows as ProductRow[]).map(toProduct);
 }
 
-export function createProduct(input: ProductInput): Product {
-  const db = getDb();
+export async function createProduct(input: ProductInput): Promise<Product> {
+  const db = await getDb();
   const id = randomUUID();
   const now = new Date().toISOString();
-  const slug = uniqueSlug(input.name, (candidate) => slugExists(candidate));
+  const slug = await uniqueSlug(input.name, (candidate) => slugExists(candidate));
 
-  db.prepare(
+  await db.query(
     `INSERT INTO products
       (id, sku, slug, name, category, description, images, karat, weight_gram, workmanship,
        pricing_mode, manual_price, stock_status, is_visible, featured, created_at, updated_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-  ).run(
-    id,
-    input.sku,
-    slug,
-    input.name,
-    input.category,
-    input.description,
-    JSON.stringify(input.images),
-    input.karat,
-    input.weightGram,
-    input.workmanship,
-    input.pricingMode,
-    input.manualPrice,
-    input.stockStatus,
-    input.isVisible ? 1 : 0,
-    input.featured ? 1 : 0,
-    now,
-    now,
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+    [
+      id,
+      input.sku,
+      slug,
+      input.name,
+      input.category,
+      input.description,
+      JSON.stringify(input.images),
+      input.karat,
+      input.weightGram,
+      input.workmanship,
+      input.pricingMode,
+      input.manualPrice,
+      input.stockStatus,
+      input.isVisible ? 1 : 0,
+      input.featured ? 1 : 0,
+      now,
+      now,
+    ],
   );
 
-  return getProductById(id) as Product;
+  return (await getProductById(id)) as Product;
 }
 
-export function updateProduct(id: string, input: Partial<ProductInput>): Product | null {
-  const existing = getProductById(id);
+export async function updateProduct(id: string, input: Partial<ProductInput>): Promise<Product | null> {
+  const existing = await getProductById(id);
   if (!existing) return null;
-  const db = getDb();
+  const db = await getDb();
   const now = new Date().toISOString();
 
   const next = { ...existing, ...input };
   const slug =
     input.name && input.name !== existing.name
-      ? uniqueSlug(input.name, (candidate) => slugExists(candidate, id))
+      ? await uniqueSlug(input.name, (candidate) => slugExists(candidate, id))
       : existing.slug;
 
-  db.prepare(
+  await db.query(
     `UPDATE products SET
-      sku=?, slug=?, name=?, category=?, description=?, images=?, karat=?, weight_gram=?,
-      workmanship=?, pricing_mode=?, manual_price=?, stock_status=?, is_visible=?, featured=?, updated_at=?
-     WHERE id=?`,
-  ).run(
-    next.sku,
-    slug,
-    next.name,
-    next.category,
-    next.description,
-    JSON.stringify(next.images),
-    next.karat,
-    next.weightGram,
-    next.workmanship,
-    next.pricingMode,
-    next.manualPrice,
-    next.stockStatus,
-    next.isVisible ? 1 : 0,
-    next.featured ? 1 : 0,
-    now,
-    id,
+      sku=$1, slug=$2, name=$3, category=$4, description=$5, images=$6, karat=$7, weight_gram=$8,
+      workmanship=$9, pricing_mode=$10, manual_price=$11, stock_status=$12, is_visible=$13, featured=$14, updated_at=$15
+     WHERE id=$16`,
+    [
+      next.sku,
+      slug,
+      next.name,
+      next.category,
+      next.description,
+      JSON.stringify(next.images),
+      next.karat,
+      next.weightGram,
+      next.workmanship,
+      next.pricingMode,
+      next.manualPrice,
+      next.stockStatus,
+      next.isVisible ? 1 : 0,
+      next.featured ? 1 : 0,
+      now,
+      id,
+    ],
   );
 
   return getProductById(id);
 }
 
 /** Hızlı "SATILDI" aksiyonu — admin ürün listesinde tek dokunuşla. */
-export function markProductSold(id: string): Product | null {
-  const db = getDb();
+export async function markProductSold(id: string): Promise<Product | null> {
+  const db = await getDb();
   const now = new Date().toISOString();
-  db.prepare("UPDATE products SET stock_status = 'SOLD', updated_at = ? WHERE id = ?").run(now, id);
+  await db.query("UPDATE products SET stock_status = 'SOLD', updated_at = $1 WHERE id = $2", [now, id]);
   return getProductById(id);
 }
 
-export function setProductStockStatus(id: string, status: StockStatus): Product | null {
-  const db = getDb();
+export async function setProductStockStatus(id: string, status: StockStatus): Promise<Product | null> {
+  const db = await getDb();
   const now = new Date().toISOString();
-  db.prepare("UPDATE products SET stock_status = ?, updated_at = ? WHERE id = ?").run(status, now, id);
+  await db.query("UPDATE products SET stock_status = $1, updated_at = $2 WHERE id = $3", [status, now, id]);
   return getProductById(id);
 }

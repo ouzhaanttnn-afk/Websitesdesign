@@ -17,12 +17,12 @@ export function slugify(input: string): string {
 }
 
 /** slug çakışırsa kısa bir rastgele son ek ekler. */
-export function uniqueSlug(base: string, exists: (candidate: string) => boolean): string {
+export async function uniqueSlug(base: string, exists: (candidate: string) => Promise<boolean>): Promise<string> {
   const root = slugify(base) || "urun";
-  if (!exists(root)) return root;
+  if (!(await exists(root))) return root;
   for (let i = 2; i < 50; i++) {
     const candidate = `${root}-${i}`;
-    if (!exists(candidate)) return candidate;
+    if (!(await exists(candidate))) return candidate;
   }
   return `${root}-${Date.now()}`;
 }

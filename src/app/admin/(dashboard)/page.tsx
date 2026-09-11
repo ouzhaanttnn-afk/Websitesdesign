@@ -8,17 +8,30 @@ import type { Product } from "@/domains/products/types";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
+  const [visitCount, productViewCount, whatsappCount, priceRequestCount, reservationCount, topViewedRows] =
+    await Promise.all([
+      countEventsTodayByName("page_view"),
+      countEventsTodayByName("product_view"),
+      countEventsTodayByName("whatsapp_click"),
+      countLeadsTodayByType("PRICE_REQUEST"),
+      countLeadsTodayByType("RESERVATION"),
+      getTopViewedProductsToday(5),
+    ]);
+
   const stats = [
-    { label: "Ziyaret", value: countEventsTodayByName("page_view") },
-    { label: "Ürün görüntüleme", value: countEventsTodayByName("product_view") },
-    { label: "WhatsApp tıklama", value: countEventsTodayByName("whatsapp_click") },
-    { label: "Fiyat talebi", value: countLeadsTodayByType("PRICE_REQUEST") },
-    { label: "Rezervasyon talebi", value: countLeadsTodayByType("RESERVATION") },
+    { label: "Ziyaret", value: visitCount },
+    { label: "Ürün görüntüleme", value: productViewCount },
+    { label: "WhatsApp tıklama", value: whatsappCount },
+    { label: "Fiyat talebi", value: priceRequestCount },
+    { label: "Rezervasyon talebi", value: reservationCount },
   ];
 
-  const topViewed = getTopViewedProductsToday(5)
-    .map((row) => ({ row, product: getProductById(row.productId) }))
-    .filter((entry): entry is { row: TopProductRow; product: Product } => entry.product !== null);
+  const topViewedResolved = await Promise.all(
+    topViewedRows.map(async (row) => ({ row, product: await getProductById(row.productId) })),
+  );
+  const topViewed = topViewedResolved.filter(
+    (entry): entry is { row: TopProductRow; product: Product } => entry.product !== null,
+  );
 
   return (
     <div className="container-content py-8">

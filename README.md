@@ -20,8 +20,9 @@ Yeni bir sayfa veya bileşen eklerken önce bu dokümana bakın.
 
 ## Başlarken
 
-**Node 22.5+ gerekli** (Lead Engine'in veritabanı katmanı `node:sqlite`
-kullanır — bkz. `package.json` `engines`).
+Lead Engine'in veritabanı katmanı gerçek bir Postgres bağlantısı ister
+(`POSTGRES_URL` ortam değişkeni — bkz. aşağıdaki "Veritabanı" bölümü).
+Yerel geliştirme için `.env.local`'e bir `POSTGRES_URL` eklemeniz gerekir.
 
 ```bash
 npm install
@@ -68,7 +69,7 @@ src/config/                Marka, navigasyon, iletişim, kategori config'i
   contact.ts
   categories.ts
 src/lib/prices/            Genel altın/döviz ticker soyutlaması (bkz. aşağıda)
-src/lib/db/                Lead Engine veritabanı istemcisi (node:sqlite)
+src/lib/db/                Lead Engine veritabanı istemcisi (Postgres, `pg`)
 src/middleware.ts          /admin ve /api/admin/* oturum koruması
 ```
 
@@ -100,30 +101,35 @@ tasarım sistemine dokunmadan, ayrı domain katmanları olarak eklendi.
 | `whatsapp/` | `createWhatsAppMessage()` — WhatsApp mesajı tek yerden üretilir |
 | `admin/` | Şifre doğrulama + imzalı, HttpOnly çerez tabanlı oturum (bkz. aşağıda) |
 
-### Veritabanı (V0.1 — yerel, geçiş için hazır mimari)
+### Veritabanı — Vercel Postgres (Neon)
 
-Kalıcı katman `src/lib/db/client.ts` — Node'un yerleşik `node:sqlite`
-modülünü kullanır (**Node 22.5+ gerektirir**, bkz. `package.json`
-`engines`), işletim sisteminin geçici dizininde (`os.tmpdir()`) tutulur —
-`process.cwd()` değil, çünkü Vercel'in serverless dosya sistemi
-salt-okunurdur ve yalnızca `/tmp` yazılabilir. Derleme/native bağımlılık
-gerektirmez.
+Kalıcı katman `src/lib/db/client.ts` — `pg` (`node-postgres`) ile gerçek
+bir Postgres'e bağlanır. Bağlantı dizesi `POSTGRES_URL` ortam
+değişkeninden okunur; Vercel projesinde **Storage → Postgres** bağlanınca
+bu değişken otomatik enjekte edilir.
 
-**Bilinçli V0.1 sınırlaması:** Vercel'in serverless ortamında `/tmp` de
-kalıcı değildir — her yeni deploy/soğuk başlatmada veri sıfırlanır. Bu,
-backend/veritabanı seçeneği kullanıcıyla netleştirilip onaylanan bir
-karardır (bkz. proje geçmişi): Supabase/Postgres hesabı olmadığı için,
-bugün tam çalışan bir sistemi hemen teslim edip, gerçek bir veritabanına
-geçişi mimari düzeyde
-hazır bırakmayı tercih ettik.
+**Neden Postgres (ve neden önce SQLite denendi):** V0.1'in ilk sürümünde
+Node'un yerleşik `node:sqlite` modülü, işletim sisteminin geçici
+dizininde (`os.tmpdir()`) tutulan tek dosyalık bir veritabanıyla
+çalışıyordu — hesap/kimlik bilgisi gerektirmediği için hızlıca teslim
+edilebiliyordu. Ancak canlıda ortaya çıktı ki Vercel, Next.js'in her
+route/sayfasını **ayrı bir serverless fonksiyon** olarak çalıştırabiliyor;
+her biri kendi izole `/tmp` dosya sistemine sahip. Admin panelinden
+eklenen bir ürün bir fonksiyonun `/tmp`'ine yazılıyordu, müşterinin
+gördüğü sayfa ise başka bir fonksiyonda çalışıp hiç göremiyordu — yani
+"admin ürün ekler → müşteri görür" akışı canlıda güvenilir çalışmıyordu.
+Bu yüzden ağ üzerinden erişilen, gerçekten paylaşılan bir veritabanına
+(Postgres) geçildi. Şema (`SCHEMA` sabiti, `src/lib/db/client.ts`) ilk
+istekte otomatik kurulur (`CREATE TABLE IF NOT EXISTS`) — ayrı bir
+migration adımı gerekmez.
 
-**Gerçek bir veritabanına geçiş** (ör. Supabase/Postgres):
-1. Her domain'in `repository.ts` dosyasındaki fonksiyonları aynı imzalarla
-   yeni istemciye (ör. `@supabase/supabase-js`, `pg`) yönlendirin.
-2. `src/lib/db/client.ts`'teki `SCHEMA` sabitini eşdeğer bir migration'a
-   çevirin.
-3. Hiçbir sayfa, API route veya component değişmeden kalır — hepsi
-   repository fonksiyonlarını çağırır, ham SQL/DB detayına dokunmaz.
+**Yerel geliştirme:** `.env.local`'e Vercel'in verdiği `POSTGRES_URL`
+değerini (veya kendi Postgres'inizin bağlantı dizesini) ekleyin.
+
+**Başka bir Postgres sağlayıcısına geçiş:** Sadece `POSTGRES_URL` ortam
+değişkenini değiştirin — kod, herhangi bir standart Postgres'e (Supabase,
+Neon, RDS, …) bağlanacak şekilde yazıldı, Vercel'e özel bir SDK
+kullanılmıyor.
 
 ### Admin paneli (`/admin`)
 

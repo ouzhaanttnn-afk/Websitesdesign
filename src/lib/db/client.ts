@@ -1,30 +1,17 @@
-import { DatabaseSync } from "node:sqlite";
-import { existsSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
+import { Pool } from "pg";
 
 /**
- * V0.1 kalıcı katmanı: Node'un yerleşik `node:sqlite` modülü (Node 22.5+,
- * deneysel — derleme gerektirmeyen tek bağımlılıksız seçenek, bkz.
- * package.json `engines`). Dosya, işletim sisteminin geçici dizininde
- * (`os.tmpdir()`) tutulur — `process.cwd()` DEĞİL, çünkü Vercel'in
- * serverless fonksiyon dosya sistemi salt-okunurdur ve yalnızca `/tmp`
- * yazılabilir (bunu atlayıp `process.cwd()` kullanmak üretimde "server-side
- * exception" ile çökmesine sebep oluyordu — canlıda tespit edilip
- * düzeltildi).
+ * Kalıcı katman: Vercel Postgres (Neon) — proje "Storage" sekmesinden
+ * bağlanınca `POSTGRES_URL` ortam değişkenini otomatik enjekte eder.
  *
- * ÖNEMLİ SINIRLAMA: Vercel'in serverless ortamında `/tmp` da kalıcı
- * değildir — her yeni deploy/soğuk başlatmada veri sıfırlanabilir. Bu,
- * kullanıcıyla netleştirilmiş, bilinçli bir V0.1 kararıdır (gerçek bir
- * Postgres/Supabase bağlanana kadar). Geçiş şu şekilde yapılır: bu
- * dosyadaki `getDb()` ve her domain'in `repository.ts` dosyası, aynı
- * fonksiyon imzalarını koruyarak gerçek bir istemciye (ör. `pg`,
- * `@supabase/supabase-js`) yönlendirilir — üst katmanlar (API route'lar,
- * sayfalar) hiç değişmez.
+ * ÖNCEKİ SÜRÜM (node:sqlite, os.tmpdir()) canlıda çalışmıyordu: Next.js'in
+ * her route/sayfası Vercel'de ayrı bir serverless fonksiyon olarak
+ * çalışabiliyor, her biri kendi izole `/tmp` dosya sistemine sahip — admin
+ * panelinden eklenen bir ürün, müşterinin gördüğü sayfanın çalıştığı farklı
+ * bir fonksiyon örneğinde hiç görünmüyordu. Gerçek, ağ üzerinden erişilen
+ * bir veritabanı olmadan bu asla güvenilir çalışmaz — bu yüzden Postgres'e
+ * geçildi.
  */
-const DB_DIR = join(tmpdir(), "alvera-db");
-const DB_PATH = join(DB_DIR, "alvera.db");
-
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS products (
   id TEXT PRIMARY KEY,
@@ -97,34 +84,47 @@ const DEFAULT_MARKET_PRICES: Array<{ key: string; label: string; value: number }
 ];
 
 declare global {
-   
-  var __alveraDb: DatabaseSync | undefined;
+
+  var __alveraPool: Pool | undefined;
+
+  var __alveraSchemaReady: Promise<void> | undefined;
 }
 
-function seedDefaults(db: DatabaseSync) {
+function createPool(): Pool {
+  const connectionString = process.env.POSTGRES_URL;
+  if (!connectionString) {
+    throw new Error(
+      "POSTGRES_URL tanımlı değil. Vercel projesinde Storage → Postgres bağlanmalı (bkz. README 'Veritabanı' bölümü).",
+    );
+  }
+  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } });
+  // Boşta bekleyen bir bağlantıda ağ hatası oluşursa Node süreci çökertmesin.
+  pool.on("error", (err) => {
+    console.error("Postgres pool hatası:", err);
+  });
+  return pool;
+}
+
+async function ensureSchema(pool: Pool): Promise<void> {
+  await pool.query(SCHEMA);
   const now = new Date().toISOString();
-  const insert = db.prepare(
-    `INSERT OR IGNORE INTO market_prices (key, label, value, updated_at) VALUES (?, ?, ?, ?)`,
-  );
   for (const row of DEFAULT_MARKET_PRICES) {
-    insert.run(row.key, row.label, row.value, now);
+    await pool.query(
+      `INSERT INTO market_prices (key, label, value, updated_at) VALUES ($1, $2, $3, $4)
+       ON CONFLICT (key) DO NOTHING`,
+      [row.key, row.label, row.value, now],
+    );
   }
 }
 
-function createDatabase(): DatabaseSync {
-  if (!existsSync(DB_DIR)) mkdirSync(DB_DIR, { recursive: true });
-  const db = new DatabaseSync(DB_PATH);
-  db.exec("PRAGMA journal_mode = WAL;");
-  db.exec("PRAGMA foreign_keys = ON;");
-  db.exec(SCHEMA);
-  seedDefaults(db);
-  return db;
-}
-
-/** Süreç genelinde tek bir bağlantı (dev'de hot-reload'da yeniden açılmasın diye globalThis'e cache'lenir). */
-export function getDb(): DatabaseSync {
-  if (!globalThis.__alveraDb) {
-    globalThis.__alveraDb = createDatabase();
+/** Süreç genelinde tek bir pool + tek seferlik şema kurulumu (globalThis'e cache'lenir). */
+export async function getDb(): Promise<Pool> {
+  if (!globalThis.__alveraPool) {
+    globalThis.__alveraPool = createPool();
   }
-  return globalThis.__alveraDb;
+  if (!globalThis.__alveraSchemaReady) {
+    globalThis.__alveraSchemaReady = ensureSchema(globalThis.__alveraPool);
+  }
+  await globalThis.__alveraSchemaReady;
+  return globalThis.__alveraPool;
 }

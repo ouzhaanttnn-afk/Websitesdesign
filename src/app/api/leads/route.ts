@@ -59,9 +59,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const product = body.productId ? getProductById(body.productId) : null;
+  const product = body.productId ? await getProductById(body.productId) : null;
 
-  const lead = createLead({
+  const lead = await createLead({
     type: body.type as LeadType,
     productId: product?.id ?? null,
     productSku: product?.sku ?? null,

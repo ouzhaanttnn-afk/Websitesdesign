@@ -21,6 +21,9 @@ export const dynamic = "force-dynamic";
 
 export default async function CollectionsPage() {
   const market = await getPricingProvider().getPrices();
+  const productsByCategory = await Promise.all(
+    categories.map((category) => listProducts({ category: category.slug, visibleOnly: true })),
+  );
 
   return (
     <>
@@ -46,7 +49,7 @@ export default async function CollectionsPage() {
           key={category.slug}
           category={category}
           reversed={index % 2 === 1}
-          products={listProducts({ category: category.slug, visibleOnly: true })}
+          products={productsByCategory[index]!}
           market={market}
         />
       ))}

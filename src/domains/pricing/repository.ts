@@ -24,16 +24,24 @@ export interface MarketPriceRowView {
   updatedAt: string;
 }
 
-export function getMarketPriceRows(): MarketPriceRowView[] {
-  const db = getDb();
-  const rows = db.prepare("SELECT * FROM market_prices ORDER BY key").all() as unknown as MarketPriceRow[];
-  return rows.map((r) => ({ key: r.key as MarketPriceKey, label: r.label, value: r.value, updatedAt: r.updated_at }));
+export async function getMarketPriceRows(): Promise<MarketPriceRowView[]> {
+  const db = await getDb();
+  const { rows } = await db.query("SELECT * FROM market_prices ORDER BY key");
+  return (rows as MarketPriceRow[]).map((r) => ({
+    key: r.key as MarketPriceKey,
+    label: r.label,
+    value: r.value,
+    updatedAt: r.updated_at,
+  }));
 }
 
-export function getMarketPrices(): MarketPrices {
-  const rows = getMarketPriceRows();
+export async function getMarketPrices(): Promise<MarketPrices> {
+  const rows = await getMarketPriceRows();
   const byKey = new Map(rows.map((r) => [r.key, r]));
-  const latestUpdate = rows.reduce((acc, r) => (r.updatedAt > acc ? r.updatedAt : acc), rows[0]?.updatedAt ?? new Date().toISOString());
+  const latestUpdate = rows.reduce(
+    (acc, r) => (r.updatedAt > acc ? r.updatedAt : acc),
+    rows[0]?.updatedAt ?? new Date().toISOString(),
+  );
 
   const result = {} as MarketPrices;
   for (const key of Object.keys(KEY_TO_FIELD) as MarketPriceKey[]) {
@@ -43,19 +51,18 @@ export function getMarketPrices(): MarketPrices {
   return result;
 }
 
-export function updateMarketPrice(key: MarketPriceKey, value: number): void {
-  const db = getDb();
+export async function updateMarketPrice(key: MarketPriceKey, value: number): Promise<void> {
+  const db = await getDb();
   const now = new Date().toISOString();
-  db.prepare("UPDATE market_prices SET value = ?, updated_at = ? WHERE key = ?").run(value, now, key);
+  await db.query("UPDATE market_prices SET value = $1, updated_at = $2 WHERE key = $3", [value, now, key]);
 }
 
-export function updateMarketPrices(values: Partial<Record<MarketPriceKey, number>>): void {
-  const db = getDb();
+export async function updateMarketPrices(values: Partial<Record<MarketPriceKey, number>>): Promise<void> {
+  const db = await getDb();
   const now = new Date().toISOString();
-  const stmt = db.prepare("UPDATE market_prices SET value = ?, updated_at = ? WHERE key = ?");
   for (const [key, value] of Object.entries(values)) {
     if (typeof value === "number" && Number.isFinite(value)) {
-      stmt.run(value, now, key);
+      await db.query("UPDATE market_prices SET value = $1, updated_at = $2 WHERE key = $3", [value, now, key]);
     }
   }
 }

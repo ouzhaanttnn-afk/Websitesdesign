@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Geçersiz event" }, { status: 400 });
   }
 
-  recordEvent(body.name as AnalyticsEventName, {
+  await recordEvent(body.name as AnalyticsEventName, {
     productId: body.productId,
     sku: body.sku,
     category: body.category,

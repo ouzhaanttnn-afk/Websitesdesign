@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product || product.stockStatus === "HIDDEN" || !product.isVisible) {
     return { title: "Ürün bulunamadı" };
   }
@@ -31,7 +31,7 @@ function formatPrice(value: number) {
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product || product.stockStatus === "HIDDEN" || !product.isVisible) {
     notFound();
@@ -41,6 +41,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const price = calculateProductPrice(product, market);
   const categoryLabel = categories.find((c) => c.slug === product.category)?.label ?? product.category;
   const isSold = product.stockStatus === "SOLD";
+  const similarProducts = isSold ? await listSimilarProducts(product) : [];
 
   return (
     <div className="section-y">
@@ -111,7 +112,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             />
           </div>
 
-          {isSold && <SimilarProducts products={listSimilarProducts(product)} />}
+          {isSold && <SimilarProducts products={similarProducts} />}
         </div>
       </div>
     </div>

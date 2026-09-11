@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const stockStatus = searchParams.get("status") as StockStatus | null;
   const query = searchParams.get("q");
 
-  const products = listProducts({
+  const products = await listProducts({
     category: category ?? undefined,
     stockStatus: stockStatus ?? undefined,
     query: query ?? undefined,
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const product = createProduct({
+    const product = await createProduct({
       sku: body.sku.trim(),
       name: body.name.trim(),
       category: body.category,

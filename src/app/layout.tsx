@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant, Montserrat } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { SkipLink } from "@/components/layout/SkipLink";
-import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { StructuredData } from "@/components/StructuredData";
 import { brand } from "@/config/brand";
 import { siteUrl } from "@/lib/site-url";
@@ -57,10 +55,7 @@ export default function RootLayout({
         <div className="grain-overlay" aria-hidden="true" />
         <StructuredData />
         <SkipLink />
-        <Header />
-        <main id="main-content">{children}</main>
-        <Footer />
-        <WhatsAppFab />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

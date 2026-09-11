@@ -96,3 +96,23 @@ yeniden çekmiyoruz.
    `ResilientPriceProvider`'a verilen birincil sağlayıcıyı değiştirin.
 
 UI bileşenleri (`PriceTable`, `PriceTeaser`) hiçbir değişiklik gerektirmez.
+
+## 8. Lead Engine — Gerçek/Uydurma Ayrımı
+
+Aşağıdakiler bilinçli, kullanıcıyla netleştirilmiş V0.1 kararlarıdır —
+uydurma veri değildir, ama **üretime tam geçişten önce** ele alınması
+gerekir:
+
+| Alan | Şu anki durum | Üretim öncesi yapılması gereken |
+|---|---|---|
+| Veritabanı | `node:sqlite` (yerel dosya, `.data/alvera.db`) | Vercel'in serverless dosya sistemi kalıcı değildir — gerçek müşteri/lead verisi için Supabase/Postgres gibi kalıcı bir veritabanı bağlanmalı. Mimari (`src/domains/*/repository.ts`) buna hazır — bkz. README "Lead Engine" bölümü. |
+| Admin şifresi | `.env.local`'de tek bir paylaşımlı şifre (gitignore'da) | Vercel proje ayarlarından **farklı, güçlü** bir `ADMIN_PASSWORD` ve `ADMIN_SESSION_SECRET` girilmeli. |
+| Ürün fotoğrafları | Admin panelinden yüklenen görseller tarayıcıda küçültülüp veritabanında base64 olarak saklanıyor | Ölçeklenebilirlik için ayrı bir dosya depolama servisine (Supabase Storage/Vercel Blob) geçilmesi önerilir. |
+| Piyasa değerleri (Gram Altın/22-18-14 Ayar/Dolar/Euro) | Admin'in `/admin/piyasa`'dan elle girdiği değerler, ürün fiyat hesaplamasında kullanılıyor | Bilinçli olarak `/fiyatlar` sayfasındaki canlı Ozan Döviz ticker'ına **bağlanmadı** (proje talebi §10: "Gerçek harici altın API'sini henüz bağlama"). İleride otomatik senkronize edilmek istenirse `ManualPriceProvider` yerine yeni bir `LivePriceProvider` yazılır. |
+| Demo ürün verisi | Yok — repository boş bir katalogla başlar, hiçbir sahte ürün/fiyat eklenmedi | Admin panelinden gerçek ürünler eklenmeli. |
+| Dashboard metrikleri | `/admin` sayfasındaki tüm sayılar (ziyaret, ürün görüntüleme, WhatsApp tıklama, fiyat/rezervasyon talebi, en çok ilgi gören ürünler) gerçek, o gün kaydedilen `analytics_events`/`leads` tablolarından hesaplanıyor | Sahte/placeholder bir metrik yok — veri az olduğunda sayılar da düşük/sıfır görünür, bu beklenen davranıştır. |
+
+Uçtan uca akış (admin ürün ekler → müşteri görür → WhatsApp'tan sorar →
+lead oluşur → admin görür → ürün satılır → admin SATILDI der → site
+yansıtır) Playwright ile gerçek bir tarayıcı üzerinden doğrulandı — bkz.
+proje geçmişi.

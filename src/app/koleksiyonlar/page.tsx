@@ -5,13 +5,23 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CollectionSection } from "@/components/collections/CollectionSection";
 import { CategoryIndexNav } from "@/components/collections/CategoryIndexNav";
 import { categories } from "@/config/categories";
+import { listProducts } from "@/domains/products/repository";
+import { getPricingProvider } from "@/domains/pricing";
 
 export const metadata: Metadata = {
   title: "Koleksiyonlar",
   description: "Alvera Kuyumculuk koleksiyonları: altın, pırlanta, bilezik, kolye, yüzük, küpe ve saat.",
 };
 
-export default function CollectionsPage() {
+// Admin panelinden eklenen/değiştirilen ürünler her istekte yansısın diye
+// bu sayfa statik olarak build-time'da cache'lenmez (bkz. proje talebi §25
+// başarı kriteri: ürün eklenince "sitede görünür" olması bir sonraki
+// deploy'u beklememeli).
+export const dynamic = "force-dynamic";
+
+export default async function CollectionsPage() {
+  const market = await getPricingProvider().getPrices();
+
   return (
     <>
       <section className="section-y pb-10 sm:pb-10">
@@ -32,7 +42,13 @@ export default function CollectionsPage() {
       <CategoryIndexNav categories={categories} />
 
       {categories.map((category, index) => (
-        <CollectionSection key={category.slug} category={category} reversed={index % 2 === 1} />
+        <CollectionSection
+          key={category.slug}
+          category={category}
+          reversed={index % 2 === 1}
+          products={listProducts({ category: category.slug, visibleOnly: true })}
+          market={market}
+        />
       ))}
 
       <section className="section-y bg-surface-alt">

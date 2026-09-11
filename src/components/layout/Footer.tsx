@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="container-content grid gap-12 py-16 sm:py-20 md:grid-cols-3">
         <div>
-          <Image src="/brand/alvera-logo.png" alt={brand.name} width={644} height={233} className="h-8 w-auto" />
+          <Image src="/brand/alvera-logo.png" alt={brand.name} width={2603} height={856} className="h-8 w-auto" />
           <p className="mt-3 max-w-[32ch] text-body-sm text-ink-soft">{brand.tagline}</p>
           <p className="mt-1 text-body-sm text-ink-faint">{brand.locationLabel}</p>
         </div>

@@ -84,8 +84,8 @@ export function Header() {
             <Image
               src="/brand/alvera-logo.png"
               alt=""
-              width={644}
-              height={233}
+              width={2603}
+              height={856}
               priority
               className="h-8 w-auto sm:h-9"
             />

@@ -48,7 +48,7 @@ export default async function OpengraphImage() {
         >
           {brand.locationLabel}
         </div>
-        <img src={logoSrc} width={520} height={188} alt="" />
+        <img src={logoSrc} width={520} height={171} alt="" />
         <div
           style={{
             display: "flex",

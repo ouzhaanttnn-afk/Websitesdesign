@@ -13,7 +13,7 @@ metnini** kullanın.
 
 | Alan | Konum | Durum |
 |---|---|---|
-| Logo | `public/brand/alvera-logo.png` (ink), `public/brand/alvera-logo-gold.png` (koyu zeminler için) | **Alındı ve kullanılıyor.** Kullanıcının paylaştığı kartvizit fotoğrafından (`design-system/brand-assets/alvera-business-card.jpg`) kırpıldı; arka plan (kartvizit deseni) luminance-tabanlı alfa maskeleme ile temizlenip şeffaf PNG'e dönüştürüldü. Header ve Footer'da `next/image` ile kullanılıyor. **Not:** Kaynak bir telefon fotoğrafı (644×233px) — düşük çözünürlük gerektiren büyük kullanımlar (ör. büyük bir hero logosu) için tasarımcıdan orijinal vektör (AI/SVG/EPS) dosyası istenmesi önerilir. |
+| Logo | `public/brand/alvera-logo.png`, `public/brand/alvera-logo-gold.png` (iki dosya da aynı içerik — gerçek marka altını hem açık hem koyu zeminde iyi okunuyor) | **Yükseltildi — gerçek vektör kaynak kullanılıyor.** Kullanıcının paylaştığı `alveralogo.pdf` (vektör, 1920×1080pt sayfa) headless Chromium ile yüksek çözünürlükte render edilip (2603×856px), luminance-tabanlı alfa maskeleme ile şeffaf PNG'e dönüştürüldü. Önceki sürüm bir kartvizit fotoğrafından (644×233px, düşük çözünürlük) kırpılmıştı; bu artık gerçek, keskin kenarlı bir vektör render — büyük kullanımlarda (hero, büyük başlıklar) da bozulmadan kullanılabilir. |
 | Favicon / site ikonu | `src/app/icon.svg`, `src/app/favicon.ico` | Şu an marka renklerinden üretilmiş basit bir mücevher ikonu kullanılıyor (gerçek logodan değil — küçük boyutta "ALVERA" yazısı okunaksız kalacağı için kasıtlı olarak soyut bırakıldı). |
 
 ## 2. Ana Sayfa (`/`)

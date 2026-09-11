@@ -22,10 +22,14 @@ export function ImagePlaceholder({
   label,
   aspect = "aspect-[4/5]",
   className = "",
+  showMotif = true,
 }: {
   label: string;
   aspect?: string;
   className?: string;
+  /** Hero gibi kendi (imleç-etkileşimli) motifini üstte gösteren nadir
+   * durumlar için — çift motif görünmesini önler. Varsayılan: true. */
+  showMotif?: boolean;
 }) {
   return (
     <div
@@ -37,15 +41,19 @@ export function ImagePlaceholder({
           "radial-gradient(ellipse at 50% 38%, rgb(var(--color-surface)) 0%, rgb(var(--color-surface-alt)) 62%, rgb(var(--color-border) / 0.4) 100%)",
       }}
     >
-      <span
-        aria-hidden="true"
-        className="absolute left-1/2 top-[38%] h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 opacity-80 blur-2xl transition-opacity duration-700 ease-quiet group-hover:bg-accent/16"
-      />
-      <GemMotif
-        gradient
-        strokeWidth={0.55}
-        className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 opacity-35 transition-[transform,opacity] duration-700 ease-quiet group-hover:scale-[1.05] group-hover:opacity-55"
-      />
+      {showMotif && (
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-[38%] h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 opacity-80 blur-2xl transition-opacity duration-700 ease-quiet group-hover:bg-accent/16"
+          />
+          <GemMotif
+            gradient
+            strokeWidth={0.55}
+            className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 opacity-35 transition-[transform,opacity] duration-700 ease-quiet group-hover:scale-[1.05] group-hover:opacity-55"
+          />
+        </>
+      )}
 
       <span aria-hidden="true" className="absolute inset-3 border border-border/60 sm:inset-4" />
 

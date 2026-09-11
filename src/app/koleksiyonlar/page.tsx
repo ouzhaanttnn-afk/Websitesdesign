@@ -3,6 +3,7 @@ import Link from "next/link";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CollectionSection } from "@/components/collections/CollectionSection";
+import { CategoryIndexNav } from "@/components/collections/CategoryIndexNav";
 import { categories } from "@/config/categories";
 
 export const metadata: Metadata = {
@@ -25,20 +26,10 @@ export default function CollectionsPage() {
               ziyaret ederek güncel modelleri inceleyin.
             </p>
           </RevealOnScroll>
-
-          <nav aria-label="Koleksiyon kısayolları" className="mt-10 flex flex-wrap gap-3">
-            {categories.map((category) => (
-              <a
-                key={category.slug}
-                href={`#${category.slug}`}
-                className="rounded-pill border border-border px-4 py-2 text-body-sm text-ink-soft transition-colors duration-300 ease-quiet hover:border-accent-strong hover:text-accent-strong"
-              >
-                {category.label}
-              </a>
-            ))}
-          </nav>
         </div>
       </section>
+
+      <CategoryIndexNav categories={categories} />
 
       {categories.map((category, index) => (
         <CollectionSection key={category.slug} category={category} reversed={index % 2 === 1} />

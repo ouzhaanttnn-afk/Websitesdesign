@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { HeroFacet } from "@/components/home/HeroFacet";
 import { brand } from "@/config/brand";
+
+const ENTRANCE = "menu-item-in 700ms cubic-bezier(0.22,1,0.36,1) both";
+const nameWords = brand.name.split(" ");
 
 export function Hero() {
   return (
@@ -11,26 +15,58 @@ export function Hero() {
           label="Hero: Alvera Kuyumculuk vitrin / atölye editoryal görseli"
           aspect="aspect-auto h-full"
           className="h-full"
+          showMotif={false}
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/45" aria-hidden="true" />
+      <HeroFacet />
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgb(var(--color-accent)/0.10),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/45"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/80 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgb(var(--color-accent)/0.10),transparent_60%)]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/80 to-transparent"
         aria-hidden="true"
       />
 
-      <div className="container-content relative flex min-h-[78vh] flex-col justify-end gap-8 pb-16 pt-40 sm:min-h-[82vh] sm:pb-20">
+      <div
+        className="pointer-events-none container-content relative flex min-h-[78vh] flex-col justify-end gap-8 pb-16 pt-40 sm:min-h-[82vh] sm:pb-20"
+      >
         <div className="max-w-2xl">
-          <Eyebrow tone="inverted">{brand.locationLabel}</Eyebrow>
-          <h1 className="font-display text-display-2xl text-canvas">{brand.name}</h1>
-          <p className="mt-5 font-display text-display-md italic text-canvas/90">{brand.tagline}</p>
+          <div style={{ animation: ENTRANCE, animationDelay: "80ms" }}>
+            <Eyebrow tone="inverted">{brand.locationLabel}</Eyebrow>
+          </div>
+          <h1 className="font-display text-display-2xl text-canvas">
+            {nameWords.flatMap((word, i) => [
+              <span
+                key={`w-${word}`}
+                className="inline-block"
+                style={{ animation: ENTRANCE, animationDelay: `${200 + i * 110}ms` }}
+              >
+                {word}
+              </span>,
+              // Kelimeler arasına gerçek bir boşluk karakteri (ayrı metin
+              // düğümü) bırakılır — aksi halde bitişik inline-block'lar
+              // arasında satır kırılma noktası oluşmaz ve dar ekranlarda
+              // taşma riski doğar.
+              i < nameWords.length - 1 ? " " : null,
+            ])}
+          </h1>
+          <p
+            className="mt-5 font-display text-display-md italic text-canvas/90"
+            style={{ animation: ENTRANCE, animationDelay: "480ms" }}
+          >
+            {brand.tagline}
+          </p>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div
+          className="pointer-events-auto flex flex-col gap-4 sm:flex-row"
+          style={{ animation: ENTRANCE, animationDelay: "620ms" }}
+        >
           <Button href="/koleksiyonlar" variant="primary" tone="inverted" icon>
             Koleksiyonları Keşfet
           </Button>

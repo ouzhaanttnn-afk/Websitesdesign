@@ -379,6 +379,41 @@ gelene kadar mevcut soyut dilin daha zengin/kasıtlı hissetmesini
 sağlamaktır. Gerçek ürün/mekân fotoğrafı eklenmesi, tek başına en yüksek
 etkili adım olarak öncelik sırasında kalır.
 
+### 13.3 Özgün Etkileşim Katmanı — imleç, choreografi, sticky indeks
+
+Kullanıcı talebi ("internette özgün tasarımlar var") üzerine, ödüllü
+lüks/kuyumcu sitelerinde sık görülen ama burada **hiçbir yeni animasyon
+kütüphanesi eklemeden** (native `pointermove`/`IntersectionObserver`/CSS
+`@keyframes`) üretilen üç ekleme. Değerler UI/UX Pro Max skill'in `gsap`
+alanından doğrulandı (bkz. Result: "Hover Micro-interaction / Complex" —
+manyetik imleç takibi; "Stagger List" — kelime/karakter girişi); `ux`
+alanı ise scroll-jacking/parallax'ın hareket hastalığı riskini açıkça
+işaretlediği için (Severity: High) **sayfa kaydırmalı parallax bilerek
+eklenmedi** — sadece imleçle & sayfa yüklenişiyle sınırlı, tek seferlik
+hareketler kullanıldı.
+
+- **`HeroFacet.tsx`**: Hero'daki büyük faset motifi, imleci ince
+  işaretçili (mouse) cihazlarda ~14px'e kadar clamp'lenmiş bir "manyetik"
+  kaymayla takip eder — taşın ışığı yakalaması hissi. Sayfa başına tek
+  odak noktası (skill'in "1-2 elemanı geçme" uyarısına uyulur); dokunmatik
+  ve `prefers-reduced-motion`'da tamamen devre dışı kalır.
+- **Hero metin choreografisi**: Eyebrow → başlık (kelime kelime) → alt
+  başlık → CTA'lar, `menu-item-in` keyframe'iyle (zaten mobil menüde
+  kullanılan aynı mekanizma) kademeli olarak belirir. Saf CSS animasyonu
+  olduğundan JS'siz/yavaş bağlantıda bile içerik görünür kalır; azaltılmış
+  hareket tercihinde `globals.css`'teki global kural süreyi sıfırlar.
+- **`CategoryIndexNav.tsx`** (`/koleksiyonlar`): Kategori kısayolları artık
+  header'ın altına yapışan (sticky), `IntersectionObserver` ile aktif
+  bölümü vurgulayan bir editoryal indeks şeridi. `CollectionSection`'ın
+  `scroll-mt-32` değeri, hem header hem bu şeridin toplam yüksekliğini
+  karşılayacak şekilde ayarlandı.
+
+Uygulama notu: Hero'daki dekoratif katmanlar (`ink` gradyanı, `accent`
+parıltısı, üst hairline) `pointer-events-none` olmalıdır — aksi halde
+DOM sırasında üstte kalan bu katmanlar, altlarındaki `HeroFacet`'in
+imleç olaylarını tamamen keser (bu projede gerçekten yaşanan ve
+düzeltilen bir hata — bkz. commit geçmişi).
+
 ---
 
 ## 14. Grid & Breakpoints

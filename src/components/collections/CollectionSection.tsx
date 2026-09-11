@@ -4,7 +4,7 @@ import type { Category } from "@/config/categories";
 
 export function CollectionSection({ category, reversed }: { category: Category; reversed: boolean }) {
   return (
-    <section id={category.slug} className="scroll-mt-24 border-t border-border py-16 sm:py-20">
+    <section id={category.slug} className="scroll-mt-32 border-t border-border py-16 sm:py-20">
       <div className="container-content">
         <RevealOnScroll>
           <div

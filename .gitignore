@@ -31,3 +31,7 @@ next-env.d.ts
 # python bytecode cache (ör. skill scriptlerini çalıştırınca oluşur)
 __pycache__/
 *.pyc
+
+# vercel
+.vercel
+.env*

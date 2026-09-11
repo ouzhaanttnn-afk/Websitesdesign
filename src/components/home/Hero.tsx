@@ -13,7 +13,15 @@ export function Hero() {
           className="h-full"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/15 to-ink/40" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/45" aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_30%,rgb(var(--color-accent)/0.10),transparent_60%)]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/80 to-transparent"
+        aria-hidden="true"
+      />
 
       <div className="container-content relative flex min-h-[78vh] flex-col justify-end gap-8 pb-16 pt-40 sm:min-h-[82vh] sm:pb-20">
         <div className="max-w-2xl">

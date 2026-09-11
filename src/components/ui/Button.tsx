@@ -15,16 +15,20 @@ type Variant = "primary" | "secondary" | "ghost";
 type Tone = "default" | "inverted";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded font-sans text-body-sm font-medium tracking-wide transition-colors duration-300 ease-quiet focus-visible:outline-2 focus-visible:outline-offset-2";
+  "inline-flex items-center justify-center gap-2 rounded font-sans text-body-sm font-medium tracking-wide transition duration-300 ease-quiet focus-visible:outline-2 focus-visible:outline-offset-2";
 
 const styles: Record<Variant, Record<Tone, string>> = {
   primary: {
-    default: "bg-ink text-canvas px-8 py-4 hover:bg-ink/90 active:bg-ink/85",
-    inverted: "bg-canvas text-ink px-8 py-4 hover:bg-canvas/90 active:bg-canvas/85",
+    default:
+      "bg-ink text-canvas px-8 py-4 shadow-soft hover:-translate-y-0.5 hover:bg-ink/90 hover:shadow-elevated active:translate-y-0 active:bg-ink/85",
+    inverted:
+      "bg-canvas text-ink px-8 py-4 shadow-soft hover:-translate-y-0.5 hover:bg-canvas/90 hover:shadow-elevated active:translate-y-0 active:bg-canvas/85",
   },
   secondary: {
-    default: "border border-border text-ink px-8 py-4 hover:bg-surface-alt",
-    inverted: "border border-canvas/40 text-canvas px-8 py-4 hover:bg-canvas/10",
+    default:
+      "border border-border text-ink px-8 py-4 hover:-translate-y-0.5 hover:border-ink/30 hover:bg-surface-alt active:translate-y-0",
+    inverted:
+      "border border-canvas/40 text-canvas px-8 py-4 hover:-translate-y-0.5 hover:border-canvas/70 hover:bg-canvas/10 active:translate-y-0",
   },
   ghost: {
     default:

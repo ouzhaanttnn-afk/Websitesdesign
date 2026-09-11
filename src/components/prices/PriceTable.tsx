@@ -34,24 +34,24 @@ export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
       <table className="mt-4 hidden w-full border-collapse sm:table">
         <caption className="sr-only">Güncel altın ve döviz alış/satış fiyatları</caption>
         <thead>
-          <tr className="border-b border-border text-left">
-            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Kalem</th>
-            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Alış</th>
-            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Satış</th>
-            <th scope="col" className="py-4 text-body-sm font-medium text-ink-faint">Birim</th>
+          <tr className="border-b-2 border-ink/10 text-left">
+            <th scope="col" className="py-4 text-eyebrow font-medium uppercase tracking-widest text-ink-faint">Kalem</th>
+            <th scope="col" className="py-4 text-eyebrow font-medium uppercase tracking-widest text-ink-faint">Alış</th>
+            <th scope="col" className="py-4 text-eyebrow font-medium uppercase tracking-widest text-accent-strong">Satış</th>
+            <th scope="col" className="py-4 text-eyebrow font-medium uppercase tracking-widest text-ink-faint">Birim</th>
           </tr>
         </thead>
         <tbody>
           {snapshot.quotes.map((quote) => (
             <tr
               key={quote.id}
-              className="border-b border-border transition-colors duration-300 ease-quiet hover:bg-surface-alt/60"
+              className="border-b border-border transition-colors duration-300 ease-quiet hover:bg-surface-alt/70"
             >
               <th scope="row" className="py-5 text-body-md font-medium text-ink">
                 {quote.label}
               </th>
               <td className="tabular py-5 text-body-md text-ink-soft">{formatNumber(quote.buy)}</td>
-              <td className="tabular py-5 text-body-md font-medium text-ink">{formatNumber(quote.sell)}</td>
+              <td className="tabular py-5 text-body-md font-semibold text-accent-strong">{formatNumber(quote.sell)}</td>
               <td className="py-5 text-body-sm text-ink-faint">{quote.unit}</td>
             </tr>
           ))}
@@ -70,8 +70,8 @@ export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
                 <p className="tabular text-body-md text-ink-soft">{formatNumber(quote.buy)}</p>
               </div>
               <div>
-                <p className="text-body-sm text-ink-faint">Satış</p>
-                <p className="tabular text-body-md font-medium text-ink">{formatNumber(quote.sell)}</p>
+                <p className="text-body-sm font-medium text-accent-strong">Satış</p>
+                <p className="tabular text-body-md font-semibold text-accent-strong">{formatNumber(quote.sell)}</p>
               </div>
             </div>
           </li>

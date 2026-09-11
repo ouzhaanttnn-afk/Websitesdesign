@@ -33,7 +33,7 @@ export async function PriceTeaser() {
             {rows.map((row) => (
               <div key={row.id} className="bg-surface px-6 py-8">
                 <p className="text-body-sm text-ink-faint">{row.label}</p>
-                <p className="tabular mt-3 font-display text-display-md font-medium text-ink">
+                <p className="tabular mt-3 font-display text-display-md font-medium text-accent-strong">
                   {row.sell.toLocaleString("tr-TR", { maximumFractionDigits: 2 })}
                 </p>
                 <p className="tabular mt-1 text-body-sm text-ink-soft">

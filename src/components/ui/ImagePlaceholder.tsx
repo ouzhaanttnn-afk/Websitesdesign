@@ -1,10 +1,10 @@
 import { GemMotif } from "./GemMotif";
 
 const CORNERS = [
-  "left-3 top-3 border-l border-t",
-  "right-3 top-3 border-r border-t",
-  "left-3 bottom-3 border-l border-b",
-  "right-3 bottom-3 border-r border-b",
+  "left-1.5 top-1.5 border-l border-t",
+  "right-1.5 top-1.5 border-r border-t",
+  "left-1.5 bottom-1.5 border-l border-b",
+  "right-1.5 bottom-1.5 border-r border-b",
 ];
 
 /**
@@ -34,19 +34,26 @@ export function ImagePlaceholder({
       className={`group relative w-full overflow-hidden bg-surface-alt ${aspect} ${className}`.trim()}
       style={{
         backgroundImage:
-          "radial-gradient(ellipse at 50% 42%, rgb(var(--color-surface)) 0%, rgb(var(--color-surface-alt)) 72%)",
+          "radial-gradient(ellipse at 50% 38%, rgb(var(--color-surface)) 0%, rgb(var(--color-surface-alt)) 62%, rgb(var(--color-border) / 0.4) 100%)",
       }}
     >
+      <span
+        aria-hidden="true"
+        className="absolute left-1/2 top-[38%] h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 opacity-80 blur-2xl transition-opacity duration-700 ease-quiet group-hover:bg-accent/16"
+      />
       <GemMotif
-        strokeWidth={0.6}
-        className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 text-accent-strong/25 transition-transform duration-700 ease-quiet group-hover:scale-[1.04]"
+        gradient
+        strokeWidth={0.55}
+        className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 opacity-35 transition-[transform,opacity] duration-700 ease-quiet group-hover:scale-[1.05] group-hover:opacity-55"
       />
 
+      <span aria-hidden="true" className="absolute inset-3 border border-border/60 sm:inset-4" />
+
       {CORNERS.map((pos) => (
-        <span key={pos} aria-hidden="true" className={`absolute h-3 w-3 border-border ${pos}`} />
+        <span key={pos} aria-hidden="true" className={`absolute h-3 w-3 border-border/80 ${pos}`} />
       ))}
 
-      <div className="absolute inset-x-4 bottom-3 flex items-center gap-2">
+      <div className="absolute inset-x-4 bottom-3 flex items-center gap-2 sm:inset-x-5">
         <span className="h-px w-4 bg-border" aria-hidden="true" />
         <span className="text-body-sm text-ink-faint">{label}</span>
       </div>

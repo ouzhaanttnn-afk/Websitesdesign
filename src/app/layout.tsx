@@ -54,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="tr" className={`${cormorant.variable} ${montserrat.variable}`}>
       <body>
+        <div className="grain-overlay" aria-hidden="true" />
         <StructuredData />
         <SkipLink />
         <Header />

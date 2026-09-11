@@ -341,6 +341,44 @@ kazandırır ve gerçek görsel gelene kadarki bekleme durumunu "eksik" değil
 "tasarlanmış" hissettirir. Yeni bir dekoratif ikon ihtiyacı doğduğunda
 GemMotif'in varyasyonu tercih edilir; alakasız yeni bir ikon seti eklenmez.
 
+`gradient` prop'u (`GemMotif.tsx`), motifin stroke'unu düz `currentColor`
+yerine accent→accent-strong altın gradyanıyla çizer. Sadece vurgu
+noktalarında kullanılır (ImagePlaceholder merkezi, Divider, 404) — Header/
+Footer'daki küçük referanslarda düz renk kalır, aksi halde "her yerde altın"
+aşırılığına kaçar (bkz. §2 ilkeleri).
+
+### 13.2 Premium Art-Direction Katmanı (görsel fotoğraf olmadan zenginlik)
+
+Gerçek ürün fotoğrafı gelmeden site hâlâ "flat/dijital" değil "editoryal/
+mat" hissettirsin diye eklenen, kodla üretilen ve hiçbir görseli taklit
+etmeyen katmanlar:
+
+- **Film grenli doku** (`.grain-overlay`, `globals.css`): tüm sayfa
+  üzerinde sabit konumlu, `%5` opasiteli, `mix-blend-mode: overlay` ile
+  uygulanan SVG `feTurbulence` gürültüsü. `pointer-events: none` —
+  etkileşimi hiçbir şekilde engellemez, kontrastı ölçülebilir şekilde
+  etkilemez (axe-core ile sıfır ihlal doğrulandı).
+- **ImagePlaceholder mat çerçevesi**: köşe kırpma işaretlerinin içinde
+  ince bir `inset` çerçeve (`border-border/60`) — bir galeri paspartusu
+  gibi, görsel alanını "boş kutu" değil "bekleyen bir çerçeve"
+  hissettirir. Merkezdeki GemMotif artık `gradient` ve arkasında çok
+  hafif bulanık bir `accent` parıltısı (`blur-2xl`, ~%10 opasite) taşır.
+- **Hero ince altın hairline**: Hero görselinin üst kenarında, ortadan
+  kenarlara doğru solan 1px'lik bir `accent` çizgisi + hafif merkezi
+  radial `accent` parıltısı — sert bir "banner çizgisi" değil, ışık
+  vurgusu gibi okunur.
+- **Buton mikro-etkileşimi**: `primary`/`secondary` butonlarda hover'da
+  hafif bir "kalkış" (`-translate-y-0.5` + `shadow-soft` → `shadow-elevated`).
+- **Fiyat tablosu editoryal başlık**: sütun başlıkları eyebrow tipografisiyle
+  (`uppercase`, geniş harf aralığı) yazılır; "Satış" sütunu tek vurgu rengi
+  olarak `accent-strong` alır (müşterinin ödeyeceği fiyatı öne çıkarır).
+
+Bu katmanların hiçbiri gerçek bir fotoğrafın yerini tutma iddiasında
+değildir — amaç, `ASSET_CHECKLIST.md`'de listelenen gerçek görseller
+gelene kadar mevcut soyut dilin daha zengin/kasıtlı hissetmesini
+sağlamaktır. Gerçek ürün/mekân fotoğrafı eklenmesi, tek başına en yüksek
+etkili adım olarak öncelik sırasında kalır.
+
 ---
 
 ## 14. Grid & Breakpoints

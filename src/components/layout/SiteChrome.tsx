@@ -6,6 +6,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { WhatsAppFab } from "./WhatsAppFab";
 import { PageViewTracker } from "./PageViewTracker";
+import { SignatureCursor } from "@/components/ui/SignatureCursor";
 
 /**
  * Admin paneli (`/admin/*`) mağaza vitrini değil, ayrı ve sade bir iç araç —
@@ -26,6 +27,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <>
       <PageViewTracker />
+      <SignatureCursor />
       <Header />
       <main id="main-content">{children}</main>
       <Footer />

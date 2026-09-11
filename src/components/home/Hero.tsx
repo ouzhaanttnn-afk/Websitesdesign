@@ -32,14 +32,36 @@ export function Hero() {
         aria-hidden="true"
       />
 
+      {/* "Galeri plakası" çerçevesi — köşe işaretleri ImagePlaceholder'ın proof-sheet
+          diliyle tutarlı, sitenin genelinde tekrar eden bir marka imzası (bkz.
+          design-system/MASTER.md §13.4). */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-6 hidden sm:block lg:inset-10">
+        <span className="absolute left-0 top-0 h-5 w-5 border-l border-t border-canvas/35" />
+        <span className="absolute right-0 top-0 h-5 w-5 border-r border-t border-canvas/35" />
+        <span className="absolute bottom-0 left-0 h-5 w-5 border-b border-l border-canvas/35" />
+        <span className="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-canvas/35" />
+      </div>
       <div
-        className="pointer-events-none container-content relative flex min-h-[78vh] flex-col justify-end gap-8 pb-16 pt-40 sm:min-h-[82vh] sm:pb-20"
+        aria-hidden="true"
+        className="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 lg:right-12 xl:block"
+        style={{ animation: ENTRANCE, animationDelay: "760ms" }}
       >
-        <div className="max-w-2xl">
+        <span
+          className="block whitespace-nowrap text-eyebrow uppercase tracking-[0.32em] text-canvas/55"
+          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+        >
+          N° 01 — Koleksiyon 2026
+        </span>
+      </div>
+
+      <div
+        className="pointer-events-none container-content relative flex min-h-[84vh] flex-col justify-end gap-8 pb-16 pt-40 sm:min-h-[88vh] sm:pb-20"
+      >
+        <div className="max-w-4xl">
           <div style={{ animation: ENTRANCE, animationDelay: "80ms" }}>
             <Eyebrow tone="inverted">{brand.locationLabel}</Eyebrow>
           </div>
-          <h1 className="font-display text-display-2xl text-canvas">
+          <h1 className="font-display text-display-hero text-canvas">
             {nameWords.flatMap((word, i) => [
               <span
                 key={`w-${word}`}
@@ -56,7 +78,7 @@ export function Hero() {
             ])}
           </h1>
           <p
-            className="mt-5 font-display text-display-md italic text-canvas/90"
+            className="mt-6 max-w-md font-display text-display-md italic text-canvas/90"
             style={{ animation: ENTRANCE, animationDelay: "480ms" }}
           >
             {brand.tagline}
@@ -67,10 +89,10 @@ export function Hero() {
           className="pointer-events-auto flex flex-col gap-4 sm:flex-row"
           style={{ animation: ENTRANCE, animationDelay: "620ms" }}
         >
-          <Button href="/koleksiyonlar" variant="primary" tone="inverted" icon>
+          <Button href="/koleksiyonlar" variant="primary" tone="inverted" icon data-cursor="Keşfet">
             Koleksiyonları Keşfet
           </Button>
-          <Button href="/fiyatlar" variant="secondary" tone="inverted">
+          <Button href="/fiyatlar" variant="secondary" tone="inverted" data-cursor="Gör">
             Fiyatları Görüntüle
           </Button>
         </div>

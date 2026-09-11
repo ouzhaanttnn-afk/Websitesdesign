@@ -31,6 +31,7 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       fontSize: {
+        "display-hero": ["clamp(3.25rem, 1.35rem + 8.2vw, 7.75rem)", { lineHeight: "0.96", letterSpacing: "-0.02em" }],
         "display-2xl": ["clamp(2.75rem, 2rem + 3.2vw, 4.5rem)", { lineHeight: "1.04", letterSpacing: "-0.01em" }],
         "display-xl": ["clamp(2.25rem, 1.8rem + 2vw, 3.25rem)", { lineHeight: "1.08", letterSpacing: "-0.01em" }],
         "display-lg": ["clamp(1.875rem, 1.6rem + 1.2vw, 2.5rem)", { lineHeight: "1.14" }],

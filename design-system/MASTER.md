@@ -414,6 +414,48 @@ DOM sırasında üstte kalan bu katmanlar, altlarındaki `HeroFacet`'in
 imleç olaylarını tamamen keser (bu projede gerçekten yaşanan ve
 düzeltilen bir hata — bkz. commit geçmişi).
 
+### 13.4 Galeri Plakası Sistemi — imleç eskortu, plaka çerçevesi, editoryal indeks
+
+Kullanıcı talebi ("kimsenin yapamayacağı modern bir tasarım") üzerine
+eklenen, siteye kendine özgü, tekrar eden bir imza kazandıran üçüncü bir
+katman — bir müze/galeri "eser plakası" ve dergi "içindekiler" diline
+gönderme yapar, hiçbir yeni kütüphane eklemeden (native `pointermove` +
+`requestAnimationFrame`) üretildi:
+
+- **`SignatureCursor.tsx`**: Native imleci **değiştirmez** (yalnızca
+  yanında yumuşak, gecikmeli bir halka çizer) — bu bilinçli bir tercih:
+  imleç tamamen özel bir görselle değiştirilirse JS geç yüklendiğinde/
+  hata verdiğinde kullanıcı imleçsiz kalır. Halka `mix-blend-mode:
+  difference` ile hem açık hem koyu zeminlerde (Hero gibi) otomatik
+  okunur kalır. `[data-cursor="ETİKET"]` işaretli elemanların üzerinde
+  genişler ve etiketi gösterir (ör. Hero CTA'larında "KEŞFET"/"GÖR",
+  koleksiyon indeksinde "GÖR"). Yalnızca `pointer: fine` + hareket
+  azaltma kapalıyken çalışır (bkz. §13.3'teki aynı desen);
+  `SiteChrome`'un yalnızca public dalında render edilir (admin'de yok).
+- **Hero "plaka" çerçevesi**: `ImagePlaceholder`'ın proof-sheet köşe
+  işaretleriyle aynı dilde ince köşe parantezleri + sağ kenarda dikey,
+  döndürülmüş bir "N° 01 — Koleksiyon 2026" etiketi (`writing-mode:
+  vertical-rl`) — galeri eser plakası/kitap sırtı okuma yönü. Tamamen
+  dekoratif, `aria-hidden`.
+- **`display-hero` tipografi token'ı** (`tailwind.config.ts`, clamp
+  3.25rem→7.75rem): Hero başlığını "vitrin fotoğrafı üstü metin"
+  şablonundan çıkarıp tipografiyi kahraman yapan bir ölçek. Gerçek ürün
+  fotoğrafı gelene kadar (ve geldikten sonra da) sitenin en güçlü tek
+  imzası budur.
+- **`CategoryShowcase` → editoryal indeks**: Tekrar eden 7 boş
+  `ImagePlaceholder` kutusu yerine, büyük indeks numaralı (01–07) bir
+  liste (dergi içindekiler sayfası). Masaüstünde satır üzerine gelince
+  imleci takip eden yüzen bir önizleme paneli (`ImagePlaceholder`,
+  gerçek görsel gelince otomatik gerçek fotoğrafa döner) belirir;
+  mobilde (hover yok) her satırın yanında sabit, küçük bir `GemMotif`
+  işareti bulunur — MASTER §17 "mobil, masaüstünün küçültülmüş hâli
+  değildir" ilkesine uygun, iki ayrı çözüm.
+
+Bu üç eleman birlikte tek bir sistem kurar: Hero'daki "N° 01" plaka
+etiketi → koleksiyon indeksinin "01–07" numaralandırmasıyla aynı dili
+konuşur; imleç eskortu ikisini de birbirine bağlar. Tek seferlik bir
+"efekt" değil, markanın tekrar eden bir görsel grameri.
+
 ---
 
 ## 14. Grid & Breakpoints

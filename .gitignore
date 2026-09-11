@@ -35,6 +35,3 @@ __pycache__/
 # vercel
 .vercel
 .env*
-
-# yerel V0.1 veritabanı (node:sqlite) — bkz. src/lib/db/client.ts
-/.data/

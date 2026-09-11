@@ -104,14 +104,17 @@ tasarım sistemine dokunmadan, ayrı domain katmanları olarak eklendi.
 
 Kalıcı katman `src/lib/db/client.ts` — Node'un yerleşik `node:sqlite`
 modülünü kullanır (**Node 22.5+ gerektirir**, bkz. `package.json`
-`engines`), `.data/alvera.db` dosyasında tutulur, derleme/native bağımlılık
+`engines`), işletim sisteminin geçici dizininde (`os.tmpdir()`) tutulur —
+`process.cwd()` değil, çünkü Vercel'in serverless dosya sistemi
+salt-okunurdur ve yalnızca `/tmp` yazılabilir. Derleme/native bağımlılık
 gerektirmez.
 
-**Bilinçli V0.1 sınırlaması:** Vercel'in serverless ortamında dosya sistemi
-kalıcı değildir — her yeni deploy'da veri sıfırlanır. Bu, backend/veritabanı
-seçeneği kullanıcıyla netleştirilip onaylanan bir karardır (bkz. proje
-geçmişi): Supabase/Postgres hesabı olmadığı için, bugün tam çalışan bir
-sistemi hemen teslim edip, gerçek bir veritabanına geçişi mimari düzeyde
+**Bilinçli V0.1 sınırlaması:** Vercel'in serverless ortamında `/tmp` de
+kalıcı değildir — her yeni deploy/soğuk başlatmada veri sıfırlanır. Bu,
+backend/veritabanı seçeneği kullanıcıyla netleştirilip onaylanan bir
+karardır (bkz. proje geçmişi): Supabase/Postgres hesabı olmadığı için,
+bugün tam çalışan bir sistemi hemen teslim edip, gerçek bir veritabanına
+geçişi mimari düzeyde
 hazır bırakmayı tercih ettik.
 
 **Gerçek bir veritabanına geçiş** (ör. Supabase/Postgres):

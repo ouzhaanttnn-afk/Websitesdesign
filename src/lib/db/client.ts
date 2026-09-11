@@ -1,14 +1,19 @@
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
 
 /**
  * V0.1 kalıcı katmanı: Node'un yerleşik `node:sqlite` modülü (Node 22.5+,
  * deneysel — derleme gerektirmeyen tek bağımlılıksız seçenek, bkz.
- * package.json `engines`). Dosya `.data/alvera.db` içinde tutulur ve
- * `.gitignore`'da hariç tutulur.
+ * package.json `engines`). Dosya, işletim sisteminin geçici dizininde
+ * (`os.tmpdir()`) tutulur — `process.cwd()` DEĞİL, çünkü Vercel'in
+ * serverless fonksiyon dosya sistemi salt-okunurdur ve yalnızca `/tmp`
+ * yazılabilir (bunu atlayıp `process.cwd()` kullanmak üretimde "server-side
+ * exception" ile çökmesine sebep oluyordu — canlıda tespit edilip
+ * düzeltildi).
  *
- * ÖNEMLİ SINIRLAMA: Vercel'in serverless ortamında dosya sistemi kalıcı
+ * ÖNEMLİ SINIRLAMA: Vercel'in serverless ortamında `/tmp` da kalıcı
  * değildir — her yeni deploy/soğuk başlatmada veri sıfırlanabilir. Bu,
  * kullanıcıyla netleştirilmiş, bilinçli bir V0.1 kararıdır (gerçek bir
  * Postgres/Supabase bağlanana kadar). Geçiş şu şekilde yapılır: bu
@@ -17,7 +22,7 @@ import { join } from "node:path";
  * `@supabase/supabase-js`) yönlendirilir — üst katmanlar (API route'lar,
  * sayfalar) hiç değişmez.
  */
-const DB_DIR = join(process.cwd(), ".data");
+const DB_DIR = join(tmpdir(), "alvera-db");
 const DB_PATH = join(DB_DIR, "alvera.db");
 
 const SCHEMA = `

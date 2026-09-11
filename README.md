@@ -78,4 +78,6 @@ bakın.
 - [Next.js](https://nextjs.org/) 15 (App Router)
 - TypeScript
 - Tailwind CSS
-- `next/font` ile Fraunces (display) + Inter (sans) fontları
+- `next/font` ile Cormorant (display) + Montserrat (sans) fontları
+- Tasarım kararları [UI/UX Pro Max skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+  ile doğrulandı (`.claude/skills/ui-ux-pro-max`) — bkz. `design-system/MASTER.md` §0

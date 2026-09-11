@@ -81,7 +81,7 @@ export function Header() {
         <div className="container-content flex h-full items-center justify-between">
           <Link
             href="/"
-            className="font-display text-lg tracking-[0.08em] text-ink"
+            className="font-display text-lg font-medium tracking-[0.08em] text-ink"
             aria-label={`${brand.name} — anasayfa`}
           >
             ALVERA
@@ -150,7 +150,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={`block py-3 font-display text-display-md transition-colors duration-300 ease-quiet ${
+                      className={`block py-3 font-display text-display-md font-medium transition-colors duration-300 ease-quiet ${
                         active ? "text-accent-strong" : "text-ink"
                       }`}
                     >

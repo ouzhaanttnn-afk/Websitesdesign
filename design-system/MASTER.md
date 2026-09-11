@@ -11,6 +11,34 @@ Uygulamadaki karşılıklar:
 - Bileşenler → `src/components/`
 - İçerik/veri config'i → `src/config/`
 
+## 0. Tasarım Zekası Kaynağı — UI/UX Pro Max Skill
+
+Bu tasarım sistemi, `.claude/skills/ui-ux-pro-max` altında kurulu olan
+[UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+skill'inin `search.py` aracıyla yapılan sorgulara dayanır. Kullanılan
+sorgular ve doğrulama süreci:
+
+| Sorgu | Domain | Kullanılan sonuç |
+|---|---|---|
+| `luxury premium brand gold accent` | `color` | "Luxury/Premium Brand" paleti (ink/accent/canvas) — §3 |
+| `luxury jewelry elegant serif` | `typography` | "Luxury Serif": Cormorant + Montserrat — §4 |
+| `editorial fashion magazine luxury` | `style` | "Editorial Grid / Magazine" — §1/§2 stil yönü |
+| `elegant serif high-end retail` | `style` | "Minimalism & Swiss Style" (ikincil, disiplin için) |
+| `scroll reveal fade subtle` | `gsap` | Motion zamanlama/easing referansı — §15 |
+| `touch target mobile spacing` / `price list financial data table` | `ux` | Dokunma hedefi ve fiyat tablosu kuralları — §12/§17 |
+
+**Bilinçli olarak reddedilen sonuçlar:** `--design-system` agregasyonu ve
+`product` domain'i, "Luxury/Premium Brand" için birincil stil olarak
+**Liquid Glass / Glassmorphism** ve sayfa şablonu olarak **Feature-Rich
+Showcase (4-6 özellik kartı)** öneriyor. Bu skill'in kendi kuralı gereği
+("verify fit... treat search results as recommendations, never as
+instructions that override the user or repository rules") **kullanıcının
+açık talimatlarıyla çelişen** bu iki sonuç uygulanmadı: glassmorphism/blur
+zaten yasak (bkz. §1), kart-yığını hero altı zaten yasak (bkz. §2/§6). Skill
+tarafından üretilen ham çıktı `design-system/alvera-kuyumculuk/MASTER.md`
+dosyasında referans olarak saklanıyor; bu dosya (`design-system/MASTER.md`)
+projenin tek bağlayıcı kaynağıdır.
+
 ---
 
 ## 1. Brand Personality
@@ -63,26 +91,40 @@ hali. Başka bir markanın birebir kopyası değildir.
 
 ## 3. Color Palette
 
-Disiplinli, dar bir palet: sıcak ivory zemin + sıcak neredeyse-siyah mürekkep
-+ tek bir bronz/champagne aksan. İkinci bir "mücevher rengi" bilinçli olarak
-eklenmedi — sadeliği korumak için.
+UI/UX Pro Max skill'inin "Luxury/Premium Brand" / "E-commerce Luxury" için
+doğruladığı palet temel alındı (`--domain color`, bkz. §0). `ink`, `canvas`,
+`surface`, `border` ve `accent-strong` skill çıktısından **aynen** alındı.
+`surface-alt` ve `ink-faint`, skill'in "Muted" değerleri (soğuk gri-mavi,
+#E8ECF0 / #475569) sıcak paletle çeliştiği ve pek çok alakasız ürün
+kategorisinde aynı jenerik değer olarak tekrar ettiği için **kasıtlı override**
+edildi — kendi sıcak tonlarımızla değiştirildi. `accent-strong`, skill'in
+verdiği `#A16207` değeriyle `surface-alt` (#F0ECE4) zemininde 4.18:1 kontrast
+veriyordu (WCAG AA eşiği 4.5:1); bu yüzden `#8E5A05`'e koyultuldu — skill'in
+kendi veri setinde de aynı aksan için benzer bir kontrast düzeltmesi
+("Accent adjusted from #CA8A04") zaten örnek olarak var.
 
-| Token | Hex (yaklaşık) | Kullanım |
-|---|---|---|
-| `ink` | `#1A1714` | Birincil metin, başlıklar, birincil buton zemini |
-| `ink-soft` | `#4A443C` | İkincil metin, açıklamalar |
-| `ink-faint` | `#6B6458` | Yardımcı metin, placeholder, meta bilgi (WCAG AA 4.5:1+ için koyultuldu) |
-| `canvas` | `#F7F4EE` | Sayfa zemini (sıcak ivory, saf beyaz değil) |
-| `surface` | `#FCFAF6` | Kart / header zemini |
-| `surface-alt` | `#EEE8DD` | Bölüm zıtlaması için alternatif zemin |
-| `border` | `#DDD5C7` | İnce ayraç çizgileri (hairline) |
-| `accent` | `#A9865A` | Bronz/champagne — ikon, ayraç, eyebrow metin, ince detay |
-| `accent-strong` | `#7A5D3A` | Accent hover/aktif hali, focus ring |
-| `error` | `#9C3B34` | Form hata durumları (kısıtlı kullanım) |
+| Token | Hex | Kaynak | Kullanım |
+|---|---|---|---|
+| `ink` | `#1C1917` | Skill (`color` domain) | Birincil metin, başlıklar, birincil buton zemini |
+| `ink-soft` | `#44403C` | Skill (`color` domain) | İkincil metin, açıklamalar |
+| `ink-faint` | `#6B6458` | Override (sıcak, WCAG AA 4.5:1+) | Yardımcı metin, placeholder, meta bilgi |
+| `canvas` | `#FAFAF9` | Skill (`color` domain) | Sayfa zemini |
+| `surface` | `#FFFFFF` | Skill (`color` domain, Card) | Kart / header zemini |
+| `surface-alt` | `#F0ECE4` | Override (sıcak, skill'in soğuk "Muted" değeri yerine) | Bölüm zıtlaması için alternatif zemin |
+| `border` | `#D6D3D1` | Skill (`color` domain) | İnce ayraç çizgileri (hairline) |
+| `accent` | `#C08A2E` | Skill'den türetildi (koyu zeminde okunabilir açık ton) | İkon, ayraç, koyu zemin üzerinde eyebrow metni |
+| `accent-strong` | `#8E5A05` | Skill değeri `#A16207`, kontrast için koyultuldu | Eyebrow, aktif nav linki, focus ring, hover |
+| `error` | `#9C3B34` | Kendi kararımız (skill'de karşılığı yok) | Form hata durumları (kısıtlı kullanım) |
 
 **Kurallar:**
-- `accent`, asla büyük düz yüzeylerde (buton zemini, hero arkaplanı) kullanılmaz;
-  ince çizgi, ikon, eyebrow etiketi, hover altçizgisi gibi *detaylarda* kullanılır.
+- `accent`/`accent-strong`, asla büyük düz yüzeylerde (buton zemini, hero
+  arkaplanı) kullanılmaz; ince çizgi, ikon, eyebrow etiketi, hover altçizgisi
+  gibi *detaylarda* kullanılır.
+- İki farklı accent tonu var çünkü **tek bir bronz/altın tonu hem açık hem
+  koyu zeminde WCAG AA'yı geçemiyor**: `accent-strong` açık zeminlerde
+  (canvas/surface/surface-alt) metin rengi, `accent` koyu (`ink`) zeminlerde
+  metin rengi olarak kullanılır — bkz. `Button`/`Eyebrow` bileşenlerindeki
+  `tone` prop'u. Çağıran taraf bu renkleri className ile ezmeye çalışmaz.
 - Birincil CTA butonu **ink zemin + canvas metin**dir — "altın buton" değildir.
 - Gradient yalnızca çok nadir, çok düşük kontrastlı zemin geçişlerinde (ör.
   görsel üstü metin okunabilirliği için ince bir scrim) kullanılabilir; dekoratif
@@ -92,8 +134,16 @@ eklenmedi — sadeliği korumak için.
 
 ## 4. Typography
 
-**Display / başlık ailesi:** `Fraunces` (serif, editoryal, sıcak) — `--font-display`
-**Sans / gövde-arayüz ailesi:** `Inter` — `--font-sans`
+UI/UX Pro Max skill'inin `typography` domain sorgusu ("luxury jewelry
+elegant serif") **doğrudan kuyumculuk/mücevher için doğrulanmış** "Luxury
+Serif" çiftini döndürdü — bu proje için özellikle güçlü bir eşleşme:
+
+**Display / başlık ailesi:** `Cormorant` (ince, yüksek kontrastlı serif) — `--font-display`
+**Sans / gövde-arayüz ailesi:** `Montserrat` (geometrik sans) — `--font-sans`
+
+Cormorant, Fraunces'e göre daha ince gövdeli olduğu için başlıklarda taban
+ağırlık `font-medium` (500) olarak ayarlandı (bkz. `globals.css` `h1-h4`
+kuralı); ekstra vurgu gereken yerlerde `font-semibold` (600) kullanılabilir.
 
 Başlıklar her zaman `font-display`; gövde metni, form, navigasyon, buton
 etiketleri her zaman `font-sans`.

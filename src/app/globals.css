@@ -3,15 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --color-ink: 26 23 20;
-  --color-ink-soft: 74 68 60;
+  /* UI/UX Pro Max skill — "Luxury/Premium Brand" / "E-commerce Luxury" verified
+     palette (bkz. design-system/MASTER.md §3). ink/canvas/accent-strong alındığı
+     gibi kullanıldı; surface-alt ve ink-faint, skill'in "Muted" değerleri sıcak
+     paletle çelişen soğuk gri tonlar olduğu için kasıtlı olarak override edildi. */
+  --color-ink: 28 25 23;
+  --color-ink-soft: 68 64 60;
   --color-ink-faint: 107 100 88;
-  --color-canvas: 247 244 238;
-  --color-surface: 252 250 246;
-  --color-surface-alt: 238 232 221;
-  --color-border: 221 213 199;
-  --color-accent: 169 134 90;
-  --color-accent-strong: 122 93 58;
+  --color-canvas: 250 250 249;
+  --color-surface: 255 255 255;
+  --color-surface-alt: 240 236 228;
+  --color-border: 214 211 209;
+  --color-accent: 192 138 46;
+  --color-accent-strong: 142 90 5;
   --color-error: 156 59 52;
 }
 
@@ -34,7 +38,9 @@
   h2,
   h3,
   h4 {
-    @apply font-display text-ink;
+    /* Cormorant, Fraunces'e göre daha ince bir serif; başlıklarda yeterli
+       görsel ağırlık için 500 taban weight kullanılıyor. */
+    @apply font-display font-medium text-ink;
   }
 
   :focus-visible {

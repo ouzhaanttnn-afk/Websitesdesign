@@ -27,3 +27,7 @@ next-env.d.ts
 
 # editor
 .vscode/
+
+# python bytecode cache (ör. skill scriptlerini çalıştırınca oluşur)
+__pycache__/
+*.pyc

@@ -2,8 +2,8 @@
 
 Bu doküman, sitede şu anda **geçici görsel alanı (`ImagePlaceholder`)** ile
 gösterilen ve gerçek görsel/veri ile değiştirilmesi gereken tüm noktaları
-listeler. Repository içinde kullanılabilir gerçek bir Alvera logosu, ürün
-fotoğrafı veya marka görseli bulunmadığı için hiçbir görsel uydurulmadı.
+listeler. Repository içinde kullanılabilir gerçek bir ürün fotoğrafı veya
+mekân görseli bulunmadığı için hiçbir görsel uydurulmadı.
 
 Bir gerçek görsel geldiğinde yapılacak işlem her yerde aynıdır:
 `ImagePlaceholder` bileşenini `next/image` ile değiştirin ve **aynı `alt`
@@ -13,8 +13,9 @@ metnini** kullanın.
 
 | Alan | Konum | Durum |
 |---|---|---|
-| Logo (wordmark yerine gerçek logo) | `src/components/layout/Header.tsx`, `src/components/layout/Footer.tsx` | Şu an "ALVERA" metin logosu (wordmark) kullanılıyor. Gerçek logo dosyası verilirse `next/image` ile değiştirilebilir. |
-| Favicon / site ikonu | `src/app/icon.svg`, `src/app/favicon.ico` | Şu an marka renklerinden üretilmiş basit bir mücevher ikonu kullanılıyor (gerçek logo değil). |
+| Logo — mağaza tabela fotoğrafı | `design-system/brand-assets/alvera-store-signage.jpg` | **Alındı.** Gerçek tabelanın fotoğrafı; wordmark'ın tipografi/renk karakterini (kalın sans-serif, altın) kalibre etmek için kullanıldı (bkz. `design-system/MASTER.md` §10). Kendisi doğrudan sitede kullanılmıyor (ham fotoğraf, kırpılmamış/arka plan temizlenmemiş). |
+| Logo — temiz vektör/PNG dosyası | `src/components/layout/Header.tsx`, `src/components/layout/Footer.tsx` | **Hâlâ eksik.** Şu an tabelaya sadık bir metin wordmark'ı (`font-sans font-bold`, altın renk) kullanılıyor. Kenarları temiz, arka planı şeffaf bir logo dosyası (SVG/PNG) verilirse `next/image` ile birebir değiştirilebilir. |
+| Favicon / site ikonu | `src/app/icon.svg`, `src/app/favicon.ico` | Şu an marka renklerinden üretilmiş basit bir mücevher ikonu kullanılıyor (gerçek logodan değil). |
 
 ## 2. Ana Sayfa (`/`)
 

@@ -9,9 +9,9 @@ export function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="container-content grid gap-12 py-16 sm:py-20 md:grid-cols-3">
         <div>
-          <p className="flex items-center gap-2.5 font-display text-lg font-medium tracking-[0.08em] text-ink">
+          <p className="flex items-center gap-2.5">
             <GemMotif strokeWidth={3} className="h-4 w-4 text-accent-strong" />
-            ALVERA
+            <span className="font-sans text-lg font-bold tracking-[0.12em] text-accent-strong">ALVERA</span>
           </p>
           <p className="mt-3 max-w-[32ch] text-body-sm text-ink-soft">{brand.tagline}</p>
           <p className="mt-1 text-body-sm text-ink-faint">{brand.locationLabel}</p>

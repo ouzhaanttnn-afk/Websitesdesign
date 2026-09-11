@@ -47,8 +47,9 @@ export default async function OpengraphImage() {
           style={{
             display: "flex",
             fontSize: 104,
-            letterSpacing: 12,
-            color: "#FAFAF9",
+            fontWeight: 700,
+            letterSpacing: 10,
+            color: "#C9982F",
           }}
         >
           ALVERA

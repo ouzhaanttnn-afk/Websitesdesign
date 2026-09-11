@@ -86,7 +86,7 @@ export function Header() {
             aria-label={`${brand.name} — anasayfa`}
           >
             <GemMotif strokeWidth={3} className="h-4 w-4 text-accent-strong" />
-            <span className="font-display text-lg font-medium tracking-[0.08em]">ALVERA</span>
+            <span className="font-sans text-lg font-bold tracking-[0.12em] text-accent-strong">ALVERA</span>
           </Link>
 
           <nav aria-label="Ana navigasyon" className="hidden md:block">

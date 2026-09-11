@@ -98,11 +98,17 @@ export function Header() {
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={`text-body-sm font-medium transition-colors duration-300 ease-quiet hover:text-accent-strong ${
+                      className={`group relative inline-block py-1 text-body-sm font-medium transition-colors duration-300 ease-quiet hover:text-accent-strong ${
                         active ? "text-accent-strong" : "text-ink"
                       }`}
                     >
                       {item.label}
+                      <span
+                        aria-hidden="true"
+                        className={`absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-accent-strong transition-transform duration-300 ease-quiet group-hover:scale-x-100 ${
+                          active ? "scale-x-100" : ""
+                        }`}
+                      />
                     </Link>
                   </li>
                 );
@@ -145,10 +151,13 @@ export function Header() {
         >
           <nav aria-label="Mobil navigasyon" className="container-content flex h-full flex-col justify-between py-10">
             <ul className="flex flex-col gap-2">
-              {primaryNav.map((item) => {
+              {primaryNav.map((item, index) => {
                 const active = pathname === item.href;
                 return (
-                  <li key={item.href}>
+                  <li
+                    key={item.href}
+                    style={{ animation: "menu-item-in 400ms cubic-bezier(0.22,1,0.36,1) both", animationDelay: `${index * 40}ms` }}
+                  >
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}

@@ -23,12 +23,33 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+// Vercel bu değişkeni her deploy'da otomatik ayarlar; yoksa (yerel geliştirme)
+// localhost'a düşer. Gerçek bir alan adı bağlanınca NEXT_PUBLIC_SITE_URL
+// olarak elle de ayarlanabilir.
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${brand.name} — ${brand.tagline}`,
     template: `%s — ${brand.name}`,
   },
   description: brand.description,
+  openGraph: {
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+  },
 };
 
 export default function RootLayout({

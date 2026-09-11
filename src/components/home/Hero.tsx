@@ -23,13 +23,21 @@ export function Hero() {
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row">
-          <Button href="/koleksiyonlar" variant="primary" tone="inverted">
+          <Button href="/koleksiyonlar" variant="primary" tone="inverted" icon>
             Koleksiyonları Keşfet
           </Button>
           <Button href="/fiyatlar" variant="secondary" tone="inverted">
             Fiyatları Görüntüle
           </Button>
         </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="absolute bottom-8 right-6 hidden flex-col items-center gap-2 sm:right-10 md:flex"
+      >
+        <span className="text-eyebrow uppercase text-canvas/70">Kaydır</span>
+        <span className="scroll-cue-line h-8 w-px bg-canvas/70" />
       </div>
     </section>
   );

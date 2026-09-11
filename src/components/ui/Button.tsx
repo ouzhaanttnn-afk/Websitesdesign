@@ -38,6 +38,8 @@ interface ButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   variant?: Variant;
   tone?: Tone;
+  /** İnce bir ok ikonu ekler; hover'da hafifçe sağa kayar. Yalnızca birincil CTA'larda kullanılır. */
+  icon?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -45,14 +47,27 @@ interface ButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 export function Button({
   variant = "primary",
   tone = "default",
+  icon = false,
   className = "",
   href,
   children,
   ...rest
 }: ButtonProps) {
   return (
-    <Link href={href} className={`${base} ${styles[variant][tone]} ${className}`.trim()} {...rest}>
+    <Link href={href} className={`group ${base} ${styles[variant][tone]} ${className}`.trim()} {...rest}>
       {children}
+      {icon && (
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 16 16"
+          className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 ease-quiet group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        >
+          <path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
     </Link>
   );
 }

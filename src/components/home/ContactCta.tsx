@@ -15,7 +15,7 @@ export function ContactCta() {
           </h2>
         </RevealOnScroll>
         <RevealOnScroll delay={100} className="flex flex-col gap-4 sm:flex-row">
-          <Button href={contact.whatsappHref} variant="primary" tone="inverted">
+          <Button href={contact.whatsappHref} variant="primary" tone="inverted" icon>
             WhatsApp&apos;tan Yazın
           </Button>
           <Button href="/iletisim" variant="secondary" tone="inverted">

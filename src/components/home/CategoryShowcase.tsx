@@ -57,7 +57,11 @@ export function CategoryShowcase() {
                 href={`/koleksiyonlar#${category.slug}`}
                 className="group block"
               >
-                <ImagePlaceholder label={category.imageAlt} aspect="aspect-square" />
+                <ImagePlaceholder
+                  label={category.imageAlt}
+                  aspect="aspect-square"
+                  className="transition-shadow duration-300 ease-quiet group-hover:shadow-soft"
+                />
                 <p className="mt-3 text-body-sm font-medium text-ink group-hover:text-accent-strong">
                   {category.label}
                 </p>

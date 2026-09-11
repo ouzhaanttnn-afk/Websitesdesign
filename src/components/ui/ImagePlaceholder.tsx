@@ -1,7 +1,19 @@
+import { GemMotif } from "./GemMotif";
+
+const CORNERS = [
+  "left-3 top-3 border-l border-t",
+  "right-3 top-3 border-r border-t",
+  "left-3 bottom-3 border-l border-b",
+  "right-3 bottom-3 border-r border-b",
+];
+
 /**
  * Gerçek fotoğraf/görsel gelene kadar kullanılan geçici görsel alanı.
  * Bilinçli olarak nötr tutulur: altın gradient, parlak efekt veya stok
- * "mücevher" ikonu yığını kullanılmaz (bkz. design-system/MASTER.md §13).
+ * "mücevher" ikonu yığını kullanılmaz — ama düz gri bir kutu da değil.
+ * Editoryal bir "proof sheet" çerçevesi (köşe kırpma işaretleri) ve
+ * markanın faset motifiyle (bkz. GemMotif) tutarlı, kasıtlı bir bekleme
+ * durumu olarak tasarlandı (bkz. design-system/MASTER.md §13).
  *
  * Gerçek görsel eklenirken bu bileşenin yerine `next/image` ile aynı
  * `alt` metni kullanılmalıdır — bkz. ASSET_CHECKLIST.md.
@@ -19,24 +31,25 @@ export function ImagePlaceholder({
     <div
       role="img"
       aria-label={label}
-      className={`relative flex w-full items-end overflow-hidden border border-border bg-surface-alt ${aspect} ${className}`.trim()}
+      className={`group relative w-full overflow-hidden bg-surface-alt ${aspect} ${className}`.trim()}
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse at 50% 42%, rgb(var(--color-surface)) 0%, rgb(var(--color-surface-alt)) 72%)",
+      }}
     >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 48 48"
-        className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-ink-faint/60"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-      >
-        <path d="M14 18 L24 6 L34 18 L24 42 Z" />
-        <path d="M14 18 L34 18" />
-        <path d="M19 18 L24 6 L29 18" />
-        <path d="M14 18 L24 42 M34 18 L24 42" />
-      </svg>
-      <span className="relative w-full bg-surface/70 px-4 py-2 text-body-sm text-ink-faint">
-        {label}
-      </span>
+      <GemMotif
+        strokeWidth={0.6}
+        className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 text-accent-strong/25 transition-transform duration-700 ease-quiet group-hover:scale-[1.04]"
+      />
+
+      {CORNERS.map((pos) => (
+        <span key={pos} aria-hidden="true" className={`absolute h-3 w-3 border-border ${pos}`} />
+      ))}
+
+      <div className="absolute inset-x-4 bottom-3 flex items-center gap-2">
+        <span className="h-px w-4 bg-border" aria-hidden="true" />
+        <span className="text-body-sm text-ink-faint">{label}</span>
+      </div>
     </div>
   );
 }

@@ -22,7 +22,10 @@ export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
           Son güncelleme: <span className="tabular">{formatUpdatedAt(snapshot.updatedAt)}</span>
         </p>
         {!snapshot.isLive && (
-          <p className="text-body-sm font-medium text-accent-strong">Demo veri — anlık piyasa verisi değildir</p>
+          <span className="inline-flex w-fit items-center gap-2 rounded-pill border border-accent-strong/25 bg-accent-strong/[0.06] px-3 py-1.5 text-body-sm font-medium text-accent-strong">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-strong" aria-hidden="true" />
+            Demo veri — anlık piyasa verisi değildir
+          </span>
         )}
       </div>
 
@@ -39,7 +42,10 @@ export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
         </thead>
         <tbody>
           {snapshot.quotes.map((quote) => (
-            <tr key={quote.id} className="border-b border-border">
+            <tr
+              key={quote.id}
+              className="border-b border-border transition-colors duration-300 ease-quiet hover:bg-surface-alt/60"
+            >
               <th scope="row" className="py-5 text-body-md font-medium text-ink">
                 {quote.label}
               </th>

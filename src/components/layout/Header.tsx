@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { primaryNav } from "@/config/navigation";
 import { contact } from "@/config/contact";
 import { brand } from "@/config/brand";
+import { GemMotif } from "@/components/ui/GemMotif";
 
 export function Header() {
   const pathname = usePathname();
@@ -81,10 +82,11 @@ export function Header() {
         <div className="container-content flex h-full items-center justify-between">
           <Link
             href="/"
-            className="font-display text-lg font-medium tracking-[0.08em] text-ink"
+            className="flex items-center gap-2.5 text-ink"
             aria-label={`${brand.name} — anasayfa`}
           >
-            ALVERA
+            <GemMotif strokeWidth={3} className="h-4 w-4 text-accent-strong" />
+            <span className="font-display text-lg font-medium tracking-[0.08em]">ALVERA</span>
           </Link>
 
           <nav aria-label="Ana navigasyon" className="hidden md:block">

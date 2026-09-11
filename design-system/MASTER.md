@@ -293,16 +293,35 @@ shadow kullanılmaz.
 
 ## 13. Image Treatment
 
-- Gerçek ürün/mekân görseli gelene kadar `ImagePlaceholder` bileşeni kullanılır:
-  düz `surface-alt` zemin, ince `border`, ortada küçük bir ikon + görsel
-  açıklaması (ör. "Pırlanta yüzük koleksiyonu görseli"). Asla sahte altın
-  gradient veya stok "jewelry" ikon yığını kullanılmaz.
+- Gerçek ürün/mekân görseli gelene kadar `ImagePlaceholder` bileşeni kullanılır.
+  Düz gri bir kutu değildir: yumuşak radial gradient zemin (`surface` →
+  `surface-alt`), ortada markanın **`GemMotif`** faset deseni (bkz. §13.1),
+  köşelerde ince "proof sheet" kırpma işaretleri ve altta minimal bir
+  açıklama etiketi (ör. "Pırlanta yüzük koleksiyonu görseli") kullanılır.
+  Bu bileşen kodla/vektörle üretilir; hiçbir zaman gerçek bir ürün
+  fotoğrafıymış gibi sunulmaz ve asla sahte altın gradient veya stok
+  "jewelry" ikon yığını kullanılmaz.
 - Gerçek görseller eklendiğinde: `next/image`, `object-cover`, tanımlı
   `sizes`, açıklayıcı `alt` metni zorunludur.
 - Görsel oranları sabit tutulur (`aspect-[4/5]` ürün, `aspect-[16/9]` /
   `aspect-[3/2]` editoryal geniş görsel) — layout shift'i önlemek için.
 - Radius: `none` (görseller köşeli/editoryal kalır, kartın kendi radius'u
   görseli kırpmaz).
+
+### 13.1 GemMotif — Marka İmzası
+
+`src/components/ui/GemMotif.tsx`, taşın üstten görünümünü çağrıştıran ince
+çizgili bir faset deseni (8 kenarlı, tek bir vektör). Kullanım alanları:
+
+- `ImagePlaceholder` içinde büyük, düşük opasiteli (`text-accent-strong/25`)
+  ambiyans elemanı olarak.
+- Header/Footer wordmark'ının yanında küçük bir işaret olarak (`h-4 w-4`).
+- `Divider` bileşeninde bölümler arası geçiş imzası olarak.
+
+Tek bir motifin tutarlı tekrarı, siteye kasıtlı/markalı bir görsel dil
+kazandırır ve gerçek görsel gelene kadarki bekleme durumunu "eksik" değil
+"tasarlanmış" hissettirir. Yeni bir dekoratif ikon ihtiyacı doğduğunda
+GemMotif'in varyasyonu tercih edilir; alakasız yeni bir ikon seti eklenmez.
 
 ---
 

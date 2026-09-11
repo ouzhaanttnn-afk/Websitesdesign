@@ -43,7 +43,9 @@ export async function PriceTeaser() {
             ))}
           </div>
           <p className="mt-4 text-body-sm text-ink-faint">
-            Gösterilen fiyatlar demo amaçlıdır, anlık piyasa verisi değildir.
+            {snapshot.isLive
+              ? `Kaynak: ${snapshot.source}. Kesin fiyat teyidi için mağazamızı arayabilirsiniz.`
+              : "Gösterilen fiyatlar demo amaçlıdır, anlık piyasa verisi değildir."}
           </p>
         </RevealOnScroll>
       </div>

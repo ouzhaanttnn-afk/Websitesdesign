@@ -1,10 +1,10 @@
 export type PriceQuoteId =
+  | "has-altin"
   | "gram-altin"
   | "ceyrek-altin"
   | "yarim-altin"
   | "tam-altin"
-  | "cumhuriyet-altini"
-  | "22-ayar-bilezik"
+  | "ata-besli"
   | "usd"
   | "eur";
 
@@ -23,6 +23,8 @@ export interface PriceSnapshot {
   updatedAt: string;
   /** Gösterilen verinin gerçek piyasa verisi olup olmadığını belirtir. */
   isLive: boolean;
+  /** isLive true ise veri kaynağının okunabilir adı (ör. "Ozan Döviz"). */
+  source?: string;
 }
 
 /**

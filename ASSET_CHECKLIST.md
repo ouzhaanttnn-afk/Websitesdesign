@@ -58,12 +58,36 @@ güncellenince site genelinde otomatik olarak değişir.
 
 ## 7. Fiyat Verisi
 
-`src/lib/prices/mock-provider.ts` içindeki tüm fiyatlar **demo amaçlıdır**,
-gerçek piyasa verisi değildir. Gerçek bir fiyat kaynağı bağlanacağında:
+**Canlı — bağlandı.** `src/lib/prices/live-provider.ts` (`OzanDovizPriceProvider`),
+ozandoviz.com'un kendi ön yüzünün kullandığı, dokümante edilmemiş uç
+noktalarından (`centergoldpagedata.php` vb.) veri çekiyor. Kimlik doğrulama
+gerektirmiyor, `robots.txt` kısıtlaması yok — ama **resmi/dokümante edilmiş
+bir public API değil**; kaynak sitenin yapısı değişirse entegrasyon
+bozulabilir.
 
+**Bu yüzden hiçbir zaman doğrudan kullanılmıyor:**
+`src/lib/prices/index.ts` → `getPriceProvider()`, canlı kaynağı
+`ResilientPriceProvider` ile sarmalar. Canlı istek başarısız olursa
+(zaman aşımı, kaynak site değişti, ağ hatası) otomatik ve sessizce
+`MockPriceProvider`'a döner — fiyatlar sayfası **asla kırılmaz**, en kötü
+ihtimalle "Demo veri" etiketiyle gösterir.
+
+**Kapsam / eşleme:** Kaynağın sunduğu kalemlerden 8'i seçildi (Has Altın,
+Gram Altın, Çeyrek/Yarım/Tam Altın, Ata Beşli, Dolar, Euro). Önceki
+mock listesindeki "Cumhuriyet Altını" ve "22 Ayar Bilezik" bu kaynakta
+mevcut değil — fabrikasyon fiyat üretmek yerine kasıtlı olarak
+listeden çıkarıldı, yerlerine kaynağın gerçekten sunduğu "Has Altın" ve
+"Ata Beşli" eklendi.
+
+**Nezaket/performans:** Kaynak site kendi sayfasında 30 saniyede bir
+sorguluyor; biz Next.js'in fetch cache'i üzerinden **60 saniyede bir**
+tazeliyoruz (`next: { revalidate: 60 }`) — her ziyaretçi isteğinde
+yeniden çekmiyoruz.
+
+**Başka bir kaynağa geçmek/eklemek için:**
 1. `src/lib/prices/types.ts` içindeki `PriceProvider` arayüzünü uygulayan
-   yeni bir sınıf yazın (ör. `live-provider.ts`).
-2. `src/lib/prices/index.ts` içindeki `getPriceProvider()` fonksiyonunun
-   döndürdüğü sınıfı değiştirin.
+   yeni bir sınıf yazın.
+2. `src/lib/prices/index.ts` içindeki `getPriceProvider()`'da
+   `ResilientPriceProvider`'a verilen birincil sağlayıcıyı değiştirin.
 
 UI bileşenleri (`PriceTable`, `PriceTeaser`) hiçbir değişiklik gerektirmez.

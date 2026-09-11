@@ -58,12 +58,15 @@ src/lib/prices/            Fiyat verisi soyutlaması (bkz. aşağıda)
 
 ## Fiyat Mimarisi
 
-Fiyatlar hiçbir harici API'ye bağlı değildir. `PriceProvider` arayüzü
-(`src/lib/prices/types.ts`) üzerinden, şu an mock veri döndüren
-`MockPriceProvider` kullanılıyor (`src/lib/prices/mock-provider.ts`).
-Gerçek bir fiyat kaynağı bağlanacağında yalnızca
-`src/lib/prices/index.ts` içindeki `getPriceProvider()` fonksiyonunun
-döndürdüğü sınıf değiştirilir — UI bileşenleri değişmeden kalır.
+Fiyatlar `PriceProvider` arayüzü (`src/lib/prices/types.ts`) üzerinden
+gelir. Canlı kaynak `OzanDovizPriceProvider` (`live-provider.ts`) —
+ozandoviz.com'un dokümante edilmemiş uç noktalarından veri çeker, 60
+saniyede bir tazelenir. `ResilientPriceProvider` bunu sarmalar: canlı
+istek başarısız olursa otomatik olarak `MockPriceProvider`'a
+(demo veri) döner, sayfa asla kırılmaz. Detaylar için
+`ASSET_CHECKLIST.md` §7'ye bakın. Farklı/ek bir kaynak bağlanacağında
+yalnızca `src/lib/prices/index.ts` içindeki `getPriceProvider()`
+fonksiyonu değiştirilir — UI bileşenleri değişmeden kalır.
 
 ## Eksik Görseller
 

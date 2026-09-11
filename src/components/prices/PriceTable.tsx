@@ -20,6 +20,7 @@ export function PriceTable({ snapshot }: { snapshot: PriceSnapshot }) {
       <div className="flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-body-sm text-ink-faint">
           Son güncelleme: <span className="tabular">{formatUpdatedAt(snapshot.updatedAt)}</span>
+          {snapshot.isLive && snapshot.source && <> · Kaynak: {snapshot.source}</>}
         </p>
         {!snapshot.isLive && (
           <span className="inline-flex w-fit items-center gap-2 rounded-pill border border-accent-strong/25 bg-accent-strong/[0.06] px-3 py-1.5 text-body-sm font-medium text-accent-strong">

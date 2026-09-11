@@ -1,4 +1,6 @@
 import { MockPriceProvider } from "./mock-provider";
+import { OzanDovizPriceProvider } from "./live-provider";
+import { ResilientPriceProvider } from "./resilient-provider";
 import type { PriceProvider } from "./types";
 
 export type { PriceProvider, PriceQuote, PriceQuoteId, PriceSnapshot } from "./types";
@@ -6,12 +8,12 @@ export type { PriceProvider, PriceQuote, PriceQuoteId, PriceSnapshot } from "./t
 /**
  * Uygulamanın kullandığı tek fiyat sağlayıcısı erişim noktası.
  *
- * Şimdilik hiçbir harici fiyat API'sine bağlanmıyoruz; mock veri döndüren
- * `MockPriceProvider` kullanılıyor. Gerçek bir piyasa veri kaynağı hazır
- * olduğunda, bu fonksiyonun döndürdüğü sınıfı değiştirmek yeterlidir —
- * bileşenler `PriceProvider` arayüzüyle konuştuğu için başka hiçbir yer
- * değişmez.
+ * Canlı kaynak (Ozan Döviz) başarısız olursa `ResilientPriceProvider`
+ * otomatik olarak `MockPriceProvider`'a döner — bileşenler her zaman
+ * `PriceProvider` arayüzüyle konuşur, hangi sağlayıcının aktif olduğunu
+ * bilmez. Farklı/ek bir kaynak bağlanacağında tek yapılması gereken bu
+ * fonksiyonun döndürdüğü sınıfı değiştirmektir.
  */
 export function getPriceProvider(): PriceProvider {
-  return new MockPriceProvider();
+  return new ResilientPriceProvider(new OzanDovizPriceProvider(), new MockPriceProvider());
 }
